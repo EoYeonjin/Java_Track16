@@ -175,7 +175,6 @@ public class SaleDao {
 				ordernum = df.format(newNum);
 			}
 		} catch (SQLException e) {
-			System.out.println("getMaxCode() method error\n"+query);
 			e.printStackTrace();
 		} finally {
 			DBConnection.closeDB(con, ps, rs);
