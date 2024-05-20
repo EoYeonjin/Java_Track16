@@ -320,7 +320,7 @@ public class RentDao {
 			System.out.println("대여코드\t차량번호\t\t모델명\t회원명\t대여일\t\t반납일\t\t총 금액");
 			System.out.println("=================================================================================");
 			for(RentDto dto: dtos) {
-				if(dto.getStatus().equals("y")) {
+				if(dto.getStatus().equals("n")) {
 					System.out.println(dto.getR_code() + "\t" +
 							dto.getV_num() +"\t" +
 							dto.getV_model() +"\t" +
