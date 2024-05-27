@@ -16,10 +16,31 @@
 	function goList(){
 		location.href="member_list.jsp";
 	}
+	
+	function goUpdateForm(){
+		//location.href="member_update.jsp?t_id=101"
+		mem.method="post";
+		mem.action="member_update.jsp";
+		mem.submit();
+	}
+	
+	function goDelete(){
+		var result = confirm("Are you sure want to delete it?");
+		
+		if(result == true){
+			mem.method="post";
+			mem.action="db_member_delete.jsp";
+			mem.submit();
+		} 
+	}
 </script>
 </head>
 <body>
+<form name="mem">
+	<input type="hidden" name="t_id" value="<%=dto.getId() %>">
+</form>
 	<table border="1" width="500">
+		<caption>Detailed Info of Member</caption>
 		<colgroup>
 			<col width="30%">
 			<col width="70%">
@@ -43,8 +64,8 @@
 		<tr>
 			<th colspan="2">
 			<input type="button" onclick="goList()" value="list">
-			<input type="button" value="modify">
-			<input type="button" value="delete">
+			<input type="button" onclick="goUpdateForm()" value="modify">
+			<input type="button" onclick="goDelete()" value="delete">
 			</th>
 		</tr>
 	</table>

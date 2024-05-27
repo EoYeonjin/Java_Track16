@@ -37,6 +37,16 @@
 			<col width="25%">
 		</colgroup>
 		<tr>
+			<td colspan="4">
+				<select>
+					<option>ID</option>
+					<option>name</option>
+				</select>
+				<input type="text" size="5">
+				<input type="button" value="search">
+			</td>
+		</tr>
+		<tr>
 			<th>ID</th>
 			<th>name</th>
 			<th>area</th>

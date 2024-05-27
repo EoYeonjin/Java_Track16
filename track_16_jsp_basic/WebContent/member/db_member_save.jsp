@@ -29,7 +29,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<script>
+<script type="text/javascript">
 		alert("<%=msg%>");
 		location.href="member_list.jsp";
 	</script>
