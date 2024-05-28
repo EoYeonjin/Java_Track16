@@ -2,11 +2,20 @@
     pageEncoding="UTF-8"%>
 <%@ page import="dao.*, dto.*, java.util.*" %>
 <%
+	request.setCharacterEncoding("UTF-8");
 	Integer.parseInt("60");
 	Scanner sc = new Scanner(System.in);
 
  	MemberDao dao = new MemberDao();
-	ArrayList<MemberDto> dtos = dao.getListAll();
+ 	String select = request.getParameter("t_select");
+ 	String search = request.getParameter("t_search");
+ 	
+ 	if(select == null){
+ 		select = "id";
+ 		search = "";
+ 	}
+ 	
+	ArrayList<MemberDto> dtos = dao.getListAll(select, search);
 %>
 <!DOCTYPE html>
 <html>
@@ -19,6 +28,13 @@
 		member.method="post";
 		member.action="member_view.jsp";
 		member.submit();
+	}
+	
+	function goSearch(){
+		mem.method="post";
+		mem.action="member_list.jsp";
+		mem.submit();
+		
 	}
 </script>
 
@@ -36,16 +52,18 @@
 			<col width="25%">
 			<col width="25%">
 		</colgroup>
+		<form name="mem">
 		<tr>
 			<td colspan="4">
-				<select>
-					<option>ID</option>
-					<option>name</option>
+				<select name="t_select">
+					<option value="id" <%if(select.equals("id")) out.print("selected"); %>>ID</option>
+					<option value="name" <%if(select.equals("name")) out.print("selected"); %>>name</option>
 				</select>
-				<input type="text" size="5">
-				<input type="button" value="search">
+				<input type="text" name="t_search" size="5" value="<%=search %>">
+				<input type="button" onclick="goSearch()" value="search">
 			</td>
 		</tr>
+		</form>
 		<tr>
 			<th>ID</th>
 			<th>name</th>

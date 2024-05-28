@@ -1,6 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="dao.*" %>    
+<%@ page import="dao.*, dto.*, java.util.*" %>    
+<%
+	MemberDao dao = new MemberDao();
+	
+	ArrayList<MemberDto> dtos = dao.getAreaCode();
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -40,7 +45,7 @@
 </head>
 <body>
 <form name="mem">
-	<table border="1" width="500">
+	<table border="1" width="800">
 		<caption>회원등록</caption>
 		<colgroup>
 			<col width="30%">
@@ -56,7 +61,18 @@
 		</tr>
 		<tr>
 			<th>area</th>
-			<td><input type="text" name="t_area" size="10"></td>
+			<td>
+			<select name = "t_area">
+<%			for(MemberDto dto: dtos){ %>
+				<option value="<%=dto.getArea_code() %>"><%=dto.getArea_name() %></option>
+<%			 }%>
+			</select>
+<!--				
+<%			for(MemberDto dto: dtos){ %>			
+			<input type="radio" name="t_area" value="<%=dto.getArea_code() %>"> <%=dto.getArea_name() %>&nbsp
+<%			 }%> 
+-->
+			</td>
 		</tr>
 		<tr>
 			<th>age</th>
