@@ -14,6 +14,7 @@
 	}
 
 	ArrayList<DpatDto> dtos = dao.getDptInfo(select, search);
+	int count = dtos.size();
 %> 
 <!DOCTYPE html>
 <html>
@@ -28,12 +29,15 @@
 	}
 </style>
 <script type="text/javascript">
-	function goView(depart_code){
+	function goDelete(depart_code){
 		dpt.t_code.value=depart_code;
+		var result = confirm("삭제하시겠습니까?");
 		
-		dpt.method="post";
-		dpt.action="dpat_view.jsp";
-		dpt.submit();
+		if(result == true){
+			dpt.method="post";
+			dpt.action="db_dpat_delete.jsp";
+			dpt.submit();
+		}
 	}
 
 	function goSearch(){
@@ -74,6 +78,7 @@
 			</select>
 			<input type="text" size="10" name="t_search" value="<%=search %>">
 			<input type="button" onclick="goSearch()" value="search">
+			<span style="float:right">총 인원:<%=count %></span>
 			</td>
 		</tr>
 		</form>
@@ -87,8 +92,8 @@
 			<td style="text-align:center"><%=dto.getDepart_code() %></td>
 			<td style="text-align:center"><%=dto.getDepart_name() %></td>
 			<th>
-			<input type="button" onclick="goUpdateForm()" value="수정">
-			<input type="button" onclick="goDelete()" value="삭제">
+			<input type="button" onclick="javascript:location.href='dpat_update.jsp?t_code=<%=dto.getDepart_code() %>'" value="수정">
+			<input type="button" onclick="goDelete('<%=dto.getDepart_code() %>')" value="삭제">
 			</th>
 		</tr>
 <%		} %>

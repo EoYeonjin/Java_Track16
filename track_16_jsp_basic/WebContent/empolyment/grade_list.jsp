@@ -14,6 +14,7 @@
 	}
 
 	ArrayList<GradeDto> dtos = dao.getGdInfo(select, search);
+	int count = dtos.size();
 %>     
 <!DOCTYPE html>
 <html>
@@ -34,7 +35,16 @@
 		src.submit();
 	}	
 	
-	
+	function goDelete(grade_code){
+		gd.t_code.value=grade_code;
+		var result = confirm("삭제하시겠습니까?");
+		
+		if(result == true){
+			gd.method="post";
+			gd.action="db_grade_delete.jsp";
+			gd.submit();
+		}
+	}
 </script>
 
 </head>
@@ -48,12 +58,12 @@
 			</th>
 		</tr>
 	</table>
-	
+
 	<form name="gd">
 		<input type="hidden" name="t_code">
-	</form>
+	</form>		
 	<table border="1" width="800">
-		<caption>부서목록</caption>
+		<caption>직급목록</caption>
 		<colgroup>
 			<col width="30%">
 			<col width="30%">
@@ -69,6 +79,7 @@
 			</select>
 			<input type="text" size="10" name="t_search" value="<%=search %>">
 			<input type="button" onclick="goSearch()" value="search">
+			<span style="float:right">총 인원:<%=count %></span>
 			</td>
 		</tr>
 		</form>
@@ -77,13 +88,13 @@
 			<th>직급 이름</th>
 			<th></th>
 		</tr>
-<%		for(GradeDto dto: dtos){ %>		
+<%		for(GradeDto dto: dtos){ %>	
 		<tr>
 			<td style="text-align:center"><%=dto.getGrade_code() %></td>
 			<td style="text-align:center"><%=dto.getGrade_name() %></td>
 			<th>
-			<input type="button" onclick="goUpdateForm()" value="수정">
-			<input type="button" onclick="goDelete()" value="삭제">
+			<input type="button" onclick="javascript:location.href='grade_update.jsp?t_code=<%=dto.getGrade_code() %>'" value="수정">
+			<input type="button" onclick="goDelete('<%=dto.getGrade_code() %>')" value="삭제">
 			</th>
 		</tr>
 <%		} %>
@@ -91,5 +102,6 @@
 			<th colspan="3"><a href="grade_write.jsp">[등록]</a></th>
 		</tr>
 	</table>
+	
 </body>
 </html>

@@ -75,7 +75,7 @@
 		</tr>
 		<tr>
 			<th>성명</th>
-			<td><input type="text" size="10" maxlength="10" name="t_name"></td>
+			<td><input type="text" size="10" maxlength="10" name="t_name" value="<%=dto.getName() %>"></td>
 		</tr>
 		<tr>
 			<th>부서</th>
@@ -99,7 +99,7 @@
 		</tr>
 		<tr>
 			<th>나이</th>
-			<td><input type="text" oninput="inputNumberOnly(this)" size="10" maxlength="3" name="t_age"></td>
+			<td><input type="text" oninput="inputNumberOnly(this)" size="10" maxlength="3" name="t_age" value="<%=dto.getAge() %>"></td>
 		</tr>
 		<tr>
 			<th colspan="2">

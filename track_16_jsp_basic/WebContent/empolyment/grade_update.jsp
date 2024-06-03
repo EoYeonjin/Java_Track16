@@ -2,16 +2,16 @@
     pageEncoding="UTF-8"%>
 <%@ page import="dao.*, dto.*, java.util.*" %> 
 <%
-	DpatDao dao = new DpatDao();
-	String depart_code = request.getParameter("t_code");
-
-	DpatDto dto = dao.checkDpt(depart_code);
-%>          
+	GradeDao dao = new GradeDao();
+	String code = request.getParameter("t_code");
+	
+	GradeDto dto = dao.checkGd(code);
+%>      
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>직급 수정</title>
 	<style>
 	table {
 		margin-top: 20px;
@@ -21,15 +21,15 @@
 	</style>
 	<script type="text/javascript">
 	function goUpdate(){
-		if(dpt.t_name.value == ""){
+		if(gd.t_name.value == ""){
 			alert("부서 이름을 입력해주세요");
-			dpt.t_name.value.focus();
+			gd.t_name.value.focus();
 			return;
 		}
 		
-		dpt.method="post";
-		dpt.action="db_dpat_update.jsp";
-		dpt.submit();	
+		gd.method="post";	
+		gd.action="db_grade_update.jsp";
+		gd.submit();	
 	}
 	</script>
 </head>
@@ -44,8 +44,8 @@
 		</tr>
 	</table>
 
-	<form name="dpt">
-	<input type="hidden" name="t_code" value="<%=dto.getDepart_code() %>">
+	<form name="gd">
+	<input type="hidden" name="t_code" value="<%=dto.getGrade_code() %>">
 	<table border="1" width="800">
 		<caption>사원 정보 수정</caption>
 		<colgroup>
@@ -54,16 +54,16 @@
 		</colgroup>
 		<tr>
 			<th>부서 코드</th>
-			<td><%=dto.getDepart_code() %></td>
+			<td><%=dto.getGrade_code() %></td>
 		</tr>
 		<tr>
 			<th>부서 이름</th>
-			<td><input type="text" size="15" maxlength="10" name="t_name" value="<%=dto.getDepart_name() %>"></td>
+			<td><input type="text" size="15" maxlength="10" name="t_name" value="<%=dto.getGrade_name() %>"></td>
 		</tr>
 
 		<tr>
 			<th colspan="2">
-				<input type="button" onclick="javascript:location.href='dpat_list.jsp'" value="목록">
+				<input type="button" onclick="javascript:location.href='grade_list.jsp'" value="목록">
 				<input type="button" onclick="goUpdate()" value="수정 저장">
 			</th>
 		</tr>

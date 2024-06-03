@@ -14,6 +14,7 @@
 	}
 
 	ArrayList<EmpDto> dtos = dao.getEmpList(select, search);
+	int count = dtos.size();
 %>    
 <!DOCTYPE html>
 <html>
@@ -76,6 +77,7 @@
 			</select>
 			<input type="text" size="10" name="t_search" value="<%=search %>">
 			<input type="button" onclick="goSearch()" value="search">
+			<span style="float:right">총 인원:<%=count %></span>
 			</td>
 		</tr>
 		</form>
