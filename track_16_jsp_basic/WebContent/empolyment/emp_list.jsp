@@ -51,7 +51,7 @@
 			<th>
 				<input type="button" onclick="javascript:location.href='emp_list.jsp'" value="사원관리">
 				<input type="button" onclick="javascript:location.href='dpat_list.jsp'" value="부서관리">
-				<input type="button" onclick="javascript:location.href='grade_list.jsp'" value="직위관리">
+				<input type="button" onclick="javascript:location.href='grade_list.jsp'" value="직급관리">
 			</th>
 		</tr>
 	</table>
@@ -73,11 +73,11 @@
 				<option value="grade" <%if(select.equals("grade")) out.print("selected"); %>>=선택=</option>
 				<option value="no" <%if(select.equals("no")) out.print("selected"); %>>사번</option>
 				<option value="name" <%if(select.equals("name")) out.print("selected"); %>>성명</option>
-				<option value="depart" <%if(select.equals("depart")) out.print("selected"); %>>부서</option>
+				<option value="depart_name" <%if(select.equals("depart_name")) out.print("selected"); %>>부서</option>
 			</select>
 			<input type="text" size="10" name="t_search" value="<%=search %>">
 			<input type="button" onclick="goSearch()" value="search">
-			<span style="float:right">총 인원:<%=count %></span>
+			<span style="float:right">총 인원 : <%=count %> 명</span>
 			</td>
 		</tr>
 		</form>

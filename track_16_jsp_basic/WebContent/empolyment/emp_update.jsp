@@ -56,7 +56,7 @@
 			<th>
 				<input type="button" onclick="javascript:location.href='emp_list.jsp'" value="사원관리">
 				<input type="button" onclick="javascript:location.href='dpat_list.jsp'" value="부서관리">
-				<input type="button" onclick="javascript:location.href='grade_list.jsp'" value="직위관리">
+				<input type="button" onclick="javascript:location.href='grade_list.jsp'" value="직급관리">
 			</th>
 		</tr>
 	</table>
@@ -82,7 +82,7 @@
 			<td>
 			<select name="t_depart">
 <%				for(DpatDto dptDto: dptDtos) {%>	
-				<option value="<%=dptDto.getDepart_code() %>"><%=dptDto.getDepart_name() %></option>
+				<option value="<%=dptDto.getDepart_code() %>" <%if(dptDto.getDepart_name().equals(dto.getDepart_name())) out.print("selected");  %>><%=dptDto.getDepart_name() %></option>
 <%				} %>	
 			</select>
 		</td>
@@ -92,7 +92,7 @@
 			<td>
 			<select name="t_grade">
 <%				for(GradeDto gdDto: gdDtos) {%>			
-				<option value="<%=gdDto.getGrade_code() %>"><%=gdDto.getGrade_name() %></option>
+				<option value="<%=gdDto.getGrade_code() %>" <%if(gdDto.getGrade_name().equals(dto.getGrade_name())) out.print("selected");  %>><%=gdDto.getGrade_name() %></option>
 <%				} %>				
 			</select>
 		</td>

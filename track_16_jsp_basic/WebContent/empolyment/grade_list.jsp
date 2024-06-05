@@ -54,7 +54,7 @@
 			<th>
 				<input type="button" onclick="javascript:location.href='emp_list.jsp'" value="사원관리">
 				<input type="button" onclick="javascript:location.href='dpat_list.jsp'" value="부서관리">
-				<input type="button" onclick="javascript:location.href='grade_list.jsp'" value="직위관리">
+				<input type="button" onclick="javascript:location.href='grade_list.jsp'" value="직급관리">
 			</th>
 		</tr>
 	</table>
@@ -79,7 +79,7 @@
 			</select>
 			<input type="text" size="10" name="t_search" value="<%=search %>">
 			<input type="button" onclick="goSearch()" value="search">
-			<span style="float:right">총 인원:<%=count %></span>
+			<span style="float:right">총 지급 수 : <%=count %> 개</span>
 			</td>
 		</tr>
 		</form>

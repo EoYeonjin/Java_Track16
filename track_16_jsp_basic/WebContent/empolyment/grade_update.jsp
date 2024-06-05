@@ -39,7 +39,7 @@
 			<th>
 				<input type="button" onclick="javascript:location.href='emp_list.jsp'" value="사원관리">
 				<input type="button" onclick="javascript:location.href='dpat_list.jsp'" value="부서관리">
-				<input type="button" onclick="javascript:location.href='grade_list.jsp'" value="직위관리">
+				<input type="button" onclick="javascript:location.href='grade_list.jsp'" value="직급관리">
 			</th>
 		</tr>
 	</table>
