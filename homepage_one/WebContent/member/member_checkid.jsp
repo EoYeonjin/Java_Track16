@@ -7,6 +7,6 @@
 		
 	int count = dao.checkId(id);
 	
-	if(count != 0) out.print("사용 불가능한 id입니다");
-	else out.print("사용 가능한 id입니다");
+	if(count != 0) out.print("사용 불가");
+	else out.print("사용 가능");
 %>

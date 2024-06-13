@@ -1,5 +1,22 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="dao.*, dto.*" %>
+<%
+	MemberDao dao = new MemberDao();
+	request.setCharacterEncoding("UTF-8");
+	
+	String sessionId = (String)session.getAttribute("sessionId");
+	if(sessionId == null){ 
+%>
+	<script type="text/javascript">
+		alert("로그인 정보가 만료 되었습니다\n다시 로그인 하세요");
+		location.href="member_login.jsp"
+	</script>	
+<% 
+	}else{
+		MemberDto dto= dao.getMemberInfo(sessionId);
+	}
+%>		
 <!doctype html>
 <html lang="ko">
  <head>
@@ -21,6 +38,7 @@
   -->
   <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
   <script src="../js/jquery-3.3.1.min.js"></script>
+  <script src="../js/common.js"></script>
   <script type="text/javascript">
   	//빈값 체크
   	function checkValue(obj, msg){
@@ -218,7 +236,7 @@
 	
 	<!-- sub contents -->
 	<div class="sub_title">
-		<h2>회원가입</h2>
+		<h2>My Information</h2>
 		<div class="container">
 		  <div class="location">
 			<ul>
@@ -269,12 +287,7 @@
                 <tbody id="joinDataBody">
                     <tr>
                         <th><label for="id">아이디<span class="must"></span></label></th>
-                        <td>
-                            <input type="text" name="t_id" id="mbrId" class="w300">
-							<a href="javascript:checkId()" class="btn_write"><b>ID중복검사</b></a>
-							<input type="text" name="t_id_result" style="border:none" /disabled>
-							<input type="hidden" name="t_id_hidden">
-						</td>
+                        <td></td>
                     </tr>
                     <tr>
                         <th><label for="name">이름</label></th>
@@ -282,20 +295,7 @@
                             <input type="text" name="t_name" id="mbrName" class="w300">
                         </td>
                     </tr>
-                    <tr>
-                        <th><label for="pw">비밀번호<!-- <span class="must"><b>필수입력</b></span> --></label></th>
-                        <td>
-                            <input type="password" name="t_password" id="scrtNo" class="w300">
-                            <p class="guideTxt"><span class="tc_point"></p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th><label for="pw_confirm">비밀번호확인<!-- <span class="must"><b>필수입력</b></span> --></label></th>
-                        <td>
-                            <input type="password" name="t_password_confirm" id="scrtNoConfirm" class="w300">
-                            <p class="guideTxt"></p>
-                        </td>
-                    </tr>
+                    
                     <tr>
                         <th>소속<span class="must"><b>필수입력</b></span></th>
                         <td>
@@ -353,6 +353,13 @@
                             </select>
                         </td>
                     </tr>
+                    <tr>
+                        <th><label for="pw">비밀번호 확인<!-- <span class="must"><b>필수입력</b></span> --></label></th>
+                        <td>
+                            <input type="password" name="t_password" id="scrtNo" class="w300">
+                            <p class="guideTxt"><span class="tc_point"></p>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
             </form> 
@@ -362,7 +369,7 @@
 	
 	<div class="btnArea Acenter pt60 pb100">
         <a href="javascript:history.go(-1);" class="btn_round btn_large btn_BlueGray w180"><b>취소</b></a>
-        <a href="javascript:goSave();" class="btn_round btn_large btn_pointColor w180"><b>확인</b></a>
+        <a href="javascript:goSave();" class="btn_round btn_large btn_pointColor w180"><b>수정 저장</b></a>
     </div>
 	
 	
@@ -402,3 +409,4 @@
 
 
 
+ 
