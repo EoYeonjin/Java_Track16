@@ -51,10 +51,10 @@
   		if(checkLength(mem.t_id, 4, 15, 'ID는 4자이상 15자 이내로 입력해주세요\n현재자릿수: ')) return;
   		
   		if(checkValue(mem.t_name, '이름을 입력해주세요')) return;
-  		if(checkLength(mem.t_id, 2, 10, '이름은 2자이상 10자 이내로 입력해주세요\n현재자릿수: ')) return;
+  		if(checkLength(mem.t_name, 2, 10, '이름은 2자이상 10자 이내로 입력해주세요\n현재자릿수: ')) return;
   		
   		if(checkValue(mem.t_password, '비밀번호를 입력해주세요')) return;
-  		if(checkLength(mem.t_id, 3, 20, '비밀번호는 3자이상 20자 이내로 입력해주세요\n현재자릿수: ')) return;
+  		if(checkLength(mem.t_password, 3, 20, '비밀번호는 3자이상 20자 이내로 입력해주세요\n현재자릿수: ')) return;
   		
   		if(checkValue(mem.t_password_confirm, '비밀번호 확인을 입력해주세요')) return;
   		if(mem.t_password.value!=mem.t_password_confirm.value){
@@ -64,13 +64,13 @@
   		}
   		
   		if(checkValue(mem.t_mobile_2, '전화번호를 입력해주세요')) return;
-  		if(checkLength(mem.t_id, 4, 4, '전화번호는 4자입니다\n현재자릿수: ')) return;
+  		if(checkLength(mem.t_mobile_2, 4, 4, '전화번호는 4자입니다\n현재자릿수: ')) return;
   		
   		if(checkValue(mem.t_mobile_3, '전화번호를 입력해주세요')) return;
-  		if(checkLength(mem.t_id, 4, 4, '전화번호는 4자입니다\n현재자릿수: ')) return;
+  		if(checkLength(mem.t_mobile_3, 4, 4, '전화번호는 4자입니다\n현재자릿수: ')) return;
   		
   		if(checkValue(mem.t_email_1, '이메일을 입력해주세요')) return;
-  		if(checkLength(mem.t_id, 4, 20, '이메일은 4자이상 20자 이내로 입력해주세요\n현재자릿수: ')) return;
+  		if(checkLength(mem.t_email_1, 4, 20, '이메일은 4자이상 20자 이내로 입력해주세요\n현재자릿수: ')) return;
   		
   		if(mem.t_id_hidden.value != mem.t_id.value){
   			alert("중복확인을 해주세요");

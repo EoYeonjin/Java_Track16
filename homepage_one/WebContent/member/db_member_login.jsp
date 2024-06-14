@@ -1,12 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="dao.*"%>
+<%@ page import="dao.*, common.*"%>
 <%
 	request.setCharacterEncoding("UTF-8");
 	MemberDao dao = new MemberDao();
 	
 	String id = request.getParameter("t_id");
 	String password = request.getParameter("t_password");
+	
+	
 	
 	String name = dao.getLoginName(id, password);
 	String msg = "", url = "";
@@ -18,6 +20,9 @@
 	else{
 		msg = name+"님 환영합니다";
 		url = "../index.jsp";
+		
+		int result = dao.setMemberLoginTime(id, CommonUtil.getTodayTime());
+		if(result != 1) System.out.print("회원 최종 로그인 시간 Update 오류"); 
 		
 		session.setAttribute("sessionId", id);
 		session.setAttribute("sessionName", name);

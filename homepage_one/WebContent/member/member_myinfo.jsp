@@ -6,6 +6,7 @@
 	request.setCharacterEncoding("UTF-8");
 	
 	String sessionId = (String)session.getAttribute("sessionId");
+	MemberDto dto = null;
 	if(sessionId == null){ 
 %>
 	<script type="text/javascript">
@@ -14,7 +15,7 @@
 	</script>	
 <% 
 	}else{
-		MemberDto dto= dao.getMemberInfo(sessionId);
+		dto= dao.getMemberInfo(sessionId);
 	}
 %>		
 <!doctype html>
@@ -64,62 +65,46 @@
   	}
   	
   	//저장
-  	function goSave(){
-  		if(checkValue(mem.t_id, '아이디를 입력해주세요')) return;
-  		if(checkLength(mem.t_id, 4, 15, 'ID는 4자이상 15자 이내로 입력해주세요\n현재자릿수: ')) return;
-  		
+  	function goUpdate(){
   		if(checkValue(mem.t_name, '이름을 입력해주세요')) return;
-  		if(checkLength(mem.t_id, 2, 10, '이름은 2자이상 10자 이내로 입력해주세요\n현재자릿수: ')) return;
-  		
-  		if(checkValue(mem.t_password, '비밀번호를 입력해주세요')) return;
-  		if(checkLength(mem.t_id, 3, 20, '비밀번호는 3자이상 20자 이내로 입력해주세요\n현재자릿수: ')) return;
-  		
-  		if(checkValue(mem.t_password_confirm, '비밀번호 확인을 입력해주세요')) return;
-  		if(mem.t_password.value!=mem.t_password_confirm.value){
-  			alert("비밀번호가 일치하지 않습니다\n다시 입력해주세요");
-  			mem.t_password_confirm.focus();
-  			return;
-  		}
+  		if(checkLength(mem.t_name, 2, 10, '이름은 2자이상 10자 이내로 입력해주세요\n현재자릿수: ')) return;
   		
   		if(checkValue(mem.t_mobile_2, '전화번호를 입력해주세요')) return;
-  		if(checkLength(mem.t_id, 4, 4, '전화번호는 4자입니다\n현재자릿수: ')) return;
+  		if(checkLength(mem.t_mobile_2, 4, 4, '전화번호는 4자입니다\n현재자릿수: ')) return;
   		
   		if(checkValue(mem.t_mobile_3, '전화번호를 입력해주세요')) return;
-  		if(checkLength(mem.t_id, 4, 4, '전화번호는 4자입니다\n현재자릿수: ')) return;
+  		if(checkLength(mem.t_mobile_3, 4, 4, '전화번호는 4자입니다\n현재자릿수: ')) return;
   		
   		if(checkValue(mem.t_email_1, '이메일을 입력해주세요')) return;
-  		if(checkLength(mem.t_id, 4, 20, '이메일은 4자이상 20자 이내로 입력해주세요\n현재자릿수: ')) return;
+  		if(checkLength(mem.t_email_1, 4, 20, '이메일은 4자이상 20자 이내로 입력해주세요\n현재자릿수: ')) return;
   		
-  		if(mem.t_id_hidden.value != mem.t_id.value){
-  			alert("중복확인을 해주세요");
-  			return;
-  		}
-  		
-  		mem.method="post";
-  		mem.action="db_member_save.jsp";
+  		if(checkValue(mem.t_password, 'password를 입력해주세요')) return;
+		checkPassword();
+		if(mem.t_password_check.value == "no"){
+			alert("비밀번호가 맞지 않습니다\n다시 입력해주세요");
+			mem.t_password.focus();
+			return;
+		}
+		
+		mem.method="post";
+  		mem.action="db_member_update.jsp";
   		mem.submit();
   	}
   	
-  	//중복검사
-  	function checkId(){
-  		if(checkValue(mem.t_id, '아이디를 입력 후 중복검사 해주세요')) return;
+  	//비밀번호검사
+  	function checkPassword(){
   		$.ajax({
   			type:"post",
-  			url :"member_checkid.jsp",
-  			data:"t_id="+mem.t_id.value,
+  			url :"member_checkpassword.jsp",
+  			async: false,
+  			data:"t_id="+mem.t_id.value+"&t_password="+mem.t_password.value,
   			dataType:"text",
   			error:function(){
   				alert("통신 실패");
   			},
-  			success:function(data){
-  				var result = $.trim(data);	//공백 사라지게 하는 메소드
-  				mem.t_id_result.value = result;
-  				if(result == "사용 불가"){
-  					alert(mem.t_id.value+" ID는 사용불가 입니다.");
-  		  			mem.t_id.focus();
-  		  			mem.t_id_hidden.value = "";
-  		  			return;
-  				}else mem.t_id_hidden.value = mem.t_id.value;
+  			success:function(msg){
+  				var result = $.trim(msg);	//공백 사라지게 하는 메소드
+  				mem.t_password_check.value = result;
   			}
   		});
   	}
@@ -278,6 +263,7 @@
                     </ul>
                 </div>
             <form name="mem">   
+            <input type="hidden" name="t_password_check">
             <table class="table_write02" summary="회원가입을 위한 이름, 아이디, 비밀번호, 비밀번호확인, 소속, 유선전화번호, 휴대전화번호, 이메일, 주소, 본인확인질문, 본인확인답, 주활용사이트, 알림여부 정보 입력">
                 <caption>회원가입을 위한 정보입력표</caption>
                 <colgroup>
@@ -287,12 +273,15 @@
                 <tbody id="joinDataBody">
                     <tr>
                         <th><label for="id">아이디<span class="must"></span></label></th>
-                        <td></td>
+                        <td>
+                        	<%=dto.getId() %>
+                        	<input type="hidden" name="t_id" value="<%=dto.getId() %>">
+                        </td>
                     </tr>
                     <tr>
                         <th><label for="name">이름</label></th>
                         <td>
-                            <input type="text" name="t_name" id="mbrName" class="w300">
+                            <input type="text" name="t_name" id="mbrName" class="w300" value="<%=dto.getName() %>">
                         </td>
                     </tr>
                     
@@ -301,11 +290,11 @@
                         <td>
                             <label for="mbrClCd" class="blind">소속1차 카테고리 선택</label>
                             <select name="t_job" id="mbrClCd">
-                                <option value="">선택</option>
-                                <option value="1">기업</option>
-                                <option value="2">교수자</option>
-                                <option value="3">미취업자</option>
-                                <option value="4">학생</option>
+                                <option value="" <%if(dto.getJob().equals("")) out.print("selected"); %>>선택</option>
+                                <option value="1" <%if(dto.getJob().equals("1")) out.print("selected"); %>>기업</option>
+                                <option value="2" <%if(dto.getJob().equals("2")) out.print("selected"); %>>교수자</option>
+                                <option value="3" <%if(dto.getJob().equals("3")) out.print("selected"); %>>미취업자</option>
+                                <option value="4" <%if(dto.getJob().equals("4")) out.print("selected"); %>>학생</option>
                             </select>
                             <p class="guideTxt">학생 신분은 '미취업자-학생' 소속으로 선택해주십시오.</p>
                         </td>
@@ -316,15 +305,15 @@
                             <input type="hidden" name="telNo" id="telNo" value="">
                             <label for="phone_number1" class="blind">유선전화 앞번호 선택</label>
                             <select name="t_tell_1" id="telNo1" class="w95">
-                                <option value="">선택</option>
-                                <option value="02">02</option>
-                                <option value="042">042</option>
-                                <option value="051">051</option>
-                                <option value="061">061</option>
-                                <option value="070">070</option>
+                                <option value="" <%if(dto.getTell_1().equals("")) out.print("selected"); %>>선택</option>
+                                <option value="02" <%if(dto.getTell_1().equals("02")) out.print("selected"); %>>02</option>
+                                <option value="042" <%if(dto.getTell_1().equals("042")) out.print("selected"); %>>042</option>
+                                <option value="051" <%if(dto.getTell_1().equals("051")) out.print("selected"); %>>051</option>
+                                <option value="061" <%if(dto.getTell_1().equals("061")) out.print("selected"); %>>061</option>
+                                <option value="070" <%if(dto.getTell_1().equals("070")) out.print("selected"); %>>070</option>
                             </select>
-                            <input type="text" name="t_tell_2" style="width:100px" id="telNo2" class="w95" value="" maxlength="3"><label for="phone_number2" class="blind">중간번호</label>
-                            <input type="text" name="t_tell_3" style="width:100px" id="telNo3" class="w95" value="" maxlength="4"><label for="phone_number3" class="blind">마직막번호</label>
+                            <input type="text" name="t_tell_2" value="<%=dto.getTell_2() %>" style="width:100px" id="telNo2" class="w95" value="" maxlength="3"><label for="phone_number2" class="blind">중간번호</label>
+                            <input type="text" name="t_tell_3" value="<%=dto.getTell_3() %>" style="width:100px" id="telNo3" class="w95" value="" maxlength="4"><label for="phone_number3" class="blind">마직막번호</label>
                         </td>
                     </tr>
                     <tr>
@@ -333,23 +322,23 @@
                             <input type="hidden" name="mphonNo" id="mphonNo" value="">
                             <label for="mphonNo1" class="blind">휴대전화 앞번호 선택</label>
                             <select name="t_mobile_1" id="t_mobile_1" class="w95">
-                                    <option value="010">010</option>
-                                    <option value="011">011</option>
+                                    <option value="010" <%if(dto.getMobile_1().equals("010")) out.print("selected"); %>>010</option>
+                                    <option value="011" <%if(dto.getMobile_1().equals("011")) out.print("selected"); %>>011</option>
                             </select>
-                            <input type="text" name="t_mobile_2" style="width:100px" id="mphonNo2" class="w95" maxlength="4"><label for="mphonNo2" class="blind">중간번호</label>
-                            <input type="text" name="t_mobile_3" style="width:100px" id="mphonNo3" class="w95" maxlength="4"><label for="mphonNo3" class="blind">마직막번호</label>
+                            <input type="text" name="t_mobile_2" value="<%=dto.getMobile_2() %>" style="width:100px" id="mphonNo2" class="w95" maxlength="4"><label for="mphonNo2" class="blind">중간번호</label>
+                            <input type="text" name="t_mobile_3" value="<%=dto.getMobile_3() %>" style="width:100px" id="mphonNo3" class="w95" maxlength="4"><label for="mphonNo3" class="blind">마직막번호</label>
                         </td>
                     </tr> 
                     <tr>
                         <th><label for="email">이메일</label></th>
                         <td>
-                            <input type="email" name="t_email_1" id="email" class="w600" >
+                            <input type="email" name="t_email_1"  value="<%=dto.getEmail_1() %>" id="email" class="w600" >
                             @
                             <select name="t_email_2">
                             	<option value="">선택</option>
-                            	<option value="naver.com">naver.com</option>
-                            	<option value="gmail.com">gmail.com</option>
-                            	<option value="daum.net">daum.net</option>
+                            	<option value="naver.com" <%if(dto.getEmail_2().equals("naver.com")) out.print("selected"); %>>naver.com</option>
+                            	<option value="gmail.com" <%if(dto.getEmail_2().equals("gmail.com")) out.print("selected"); %>>gmail.com</option>
+                            	<option value="daum.net" <%if(dto.getEmail_2().equals("daum.net")) out.print("selected"); %>>daum.net</option>
                             </select>
                         </td>
                     </tr>
@@ -360,6 +349,10 @@
                             <p class="guideTxt"><span class="tc_point"></p>
                         </td>
                     </tr>
+                    <tr>
+                    	<th>최근 로그인 시간</th>
+                    	<td><%=dto.getLast_login_date() %></td>
+                    </tr>
                 </tbody>
             </table>
             </form> 
@@ -369,7 +362,7 @@
 	
 	<div class="btnArea Acenter pt60 pb100">
         <a href="javascript:history.go(-1);" class="btn_round btn_large btn_BlueGray w180"><b>취소</b></a>
-        <a href="javascript:goSave();" class="btn_round btn_large btn_pointColor w180"><b>수정 저장</b></a>
+        <a href="javascript:goUpdate();" class="btn_round btn_large btn_pointColor w180"><b>수정 저장</b></a>
     </div>
 	
 	
