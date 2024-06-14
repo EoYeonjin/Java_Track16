@@ -100,7 +100,7 @@ public class MemberDao {
 				"tell_1, tell_2, tell_3,\r\n" + 
 				"mobile_1, mobile_2, mobile_3,\r\n" + 
 				"email_1, email_2, \r\n" + 
-				"reg_date, last_login_date, exit_date\r\n" + 
+				"reg_date, to_char(last_login_date, 'yyyy-MM-dd hh24:mi:ss') as last_login_date, exit_date\r\n" + 
 				"from jsl_어연진_member\r\n" + 
 				"where id = '"+id+"'";
 		
@@ -112,9 +112,13 @@ public class MemberDao {
 				String name = rs.getString("name");
 				String password = rs.getString("password");
 				String job = rs.getString("job");
+				if(job == null) job= "";
 				String tell_1 = rs.getString("tell_1");
 				String tell_2 = rs.getString("tell_2");
 				String tell_3 = rs.getString("tell_3");
+				if(tell_1 == null) tell_1= "";
+				if(tell_2 == null) tell_2= "";
+				if(tell_3 == null) tell_3= "";
 				String mobile_1 = rs.getString("mobile_1");
 				String mobile_2 = rs.getString("mobile_2");
 				String mobile_3 = rs.getString("mobile_3");
@@ -122,7 +126,9 @@ public class MemberDao {
 				String email_2 = rs.getString("email_2");
 				String reg_date = rs.getString("reg_date");
 				String last_login_date = rs.getString("last_login_date");
+				if(last_login_date == null) last_login_date= "";
 				String exit_date = rs.getString("exit_date");
+				if(exit_date == null) exit_date= "";
 				
 				dto = new MemberDto(id, name, password, job, 
 						tell_1, tell_2, tell_3, 
@@ -138,5 +144,75 @@ public class MemberDao {
 		}
 		
 		return dto;
+	}
+	
+	//아이디, 비밀번호 일치 여부
+	public int checkPassword(String id, String password) {
+		int count = 0;
+		String query = "select count(*) as count\r\n" + 
+				"from jsl_어연진_member\r\n" + 
+				"where id='"+id+"' and password='"+password+"'";
+		
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement(query);
+			rs = ps.executeQuery();
+			
+			if(rs.next()) {
+				count = rs.getInt("count");
+			}
+		} catch (SQLException e) {
+			System.out.println("checkPassword() method error\n"+query);
+			e.printStackTrace();
+		} finally {
+			DBConnection.closeDB(con, ps, rs);
+		}
+		
+		return count;
+	}
+	
+	public int memberUpdate(MemberDto dto) {
+		int result = 0;
+		String query = "update jsl_어연진_member \r\n" + 
+				"set name='"+dto.getName()+"', job='"+dto.getJob()+"', \r\n" + 
+				"tell_1='"+dto.getTell_1()+"', tell_2='"+dto.getTell_2()+"', tell_3='"+dto.getTell_3()+"',\r\n" + 
+				"mobile_1='"+dto.getMobile_1()+"', mobile_2='"+dto.getMobile_2()+"', mobile_3='"+dto.getMobile_3()+"',\r\n" + 
+				"email_1='"+dto.getEmail_1()+"', email_2='"+dto.getEmail_2()+"'\r\n" + 
+				"where id = '"+dto.getId()+"'";
+		
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement(query);
+			result = ps.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println("memberUpdate() method error\n"+query);
+			e.printStackTrace();
+		} finally {
+			DBConnection.closeDB(con, ps, rs);
+		}
+		
+		return result;
+	}
+	
+	//최근 로그인 시간 업데이트
+	public int setMemberLoginTime(String id, String last_login_date) {
+		int result = 0;
+		String query = "update jsl_어연진_member \r\n" + 
+				"set last_login_date=to_date('"+last_login_date+"','yyyy-MM-dd hh24:mi:ss')\r\n" + 
+				"where id = '"+id+"'";
+		
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement(query);
+			result = ps.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println("setMemberLoginTime() method error\n"+query);
+			e.printStackTrace();
+		} finally {
+			DBConnection.closeDB(con, ps, rs);
+		}
+		
+		
+		return result;
 	}
 }

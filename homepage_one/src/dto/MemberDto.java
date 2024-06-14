@@ -7,6 +7,23 @@ public class MemberDto {
 			email_1, email_2, reg_date, 
 			last_login_date, exit_date;
 	
+	//updateMb
+	public MemberDto(String id, String name, String job, String tell_1, String tell_2, String tell_3, String mobile_1,
+			String mobile_2, String mobile_3, String email_1, String email_2) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.job = job;
+		this.tell_1 = tell_1;
+		this.tell_2 = tell_2;
+		this.tell_3 = tell_3;
+		this.mobile_1 = mobile_1;
+		this.mobile_2 = mobile_2;
+		this.mobile_3 = mobile_3;
+		this.email_1 = email_1;
+		this.email_2 = email_2;
+	}
+
 	//insertMb
 	public MemberDto(String id, String name, String password, String job, String tell_1, String tell_2, String tell_3,
 			String mobile_1, String mobile_2, String mobile_3, String email_1, String email_2, String reg_date) {
