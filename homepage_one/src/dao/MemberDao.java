@@ -73,7 +73,7 @@ public class MemberDao {
 		String name = "";
 		String query = "select name \r\n" + 
 				"from jsl_어연진_member\r\n" + 
-				"where id='"+id+"' and password='"+password+"'";
+				"where id='"+id+"' and password='"+password+"' and exit_date is null";
 		
 		try {
 			con = DBConnection.getConnection();
@@ -171,6 +171,7 @@ public class MemberDao {
 		return count;
 	}
 	
+	//회원 수정
 	public int memberUpdate(MemberDto dto) {
 		int result = 0;
 		String query = "update jsl_어연진_member \r\n" + 
@@ -212,6 +213,27 @@ public class MemberDao {
 			DBConnection.closeDB(con, ps, rs);
 		}
 		
+		
+		return result;
+	}
+	
+	//회원탈퇴
+	public int memberExit(String id, String exit_date) {
+		int result = 0;
+		String query = "update jsl_어연진_member \r\n" + 
+				"set exit_date=to_date('"+exit_date+"','yyyy-MM-dd hh24:mi:ss')\r\n" + 
+				"where id = '"+id+"'";
+		
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement(query);
+			result = ps.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println("memberExit() method error\n"+query);
+			e.printStackTrace();
+		} finally {
+			DBConnection.closeDB(con, ps, rs);
+		}
 		
 		return result;
 	}
