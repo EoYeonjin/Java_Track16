@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%
+	String sessionName = (String)session.getAttribute("sessionName");
+%>    
 <!doctype html>
 <html lang="ko">
  <head>
@@ -49,8 +52,21 @@
 			<nav class="top_right">
 				<ul>
 
-					<li class="first"><a href="member/member_login.jsp">로그인</a></li>
-					<li><a href="member/member_join.jsp">회원가입</a></li>
+					<li class="first">
+					<%if(sessionName == null) { %>
+						<a href="member/member_login.jsp">로그인</a>
+					<%}else { %>
+						<a href="member/member_logout.jsp">로그아웃</a>
+					<%} %>
+					</li>
+					<li>
+					
+					<%if(sessionName != null) { %>
+						<a href="member/member_myinfo.jsp">내정보</a>
+					<%} else {%>
+						<a href="member/member_join.jsp">회원가입</a>
+					<%} %>
+					</li>
 					<!--<li class="first"><a href="">로그아웃</a></li>
 					<li><a href="">마이페이지</a></li> -->
 				</ul>
@@ -87,13 +103,13 @@
 								<li><a href="#">취업성공패키지</a></li>
 							</ul>
 						</li> -->
-						<li><a href="notice.html">커뮤니티</a>
+						<li><a href="notice/notice_list.jsp">커뮤니티</a>
 							<ul class="nav_2depth">
-								<li><a href="notice/notice.html">공지사항</a></li>
-								<li><a href="qna/qa.html">질문과답변</a></li>
-								<li><a href="faq/faq.html">FAQ</a></li>
-								<li><a href="pds/pds.html">자료실</a></li>
-								<li><a href="adm/admin.html">관리자</a></li>
+								<li><a href="notice/notice_list.jsp">공지사항</a></li>
+								<li><a href="qna/qna_list.jsp">질문과답변</a></li>
+								<li><a href="faq/faq_list.jsp">FAQ</a></li>
+								<li><a href="pds/pds_list.jsp">자료실</a></li>
+								<li><a href="adm/adm_list.jsp">관리자</a></li>
 							</ul>
 						</li>
 					</ul>
@@ -331,15 +347,9 @@
 	<button class="btn btn-open" type="button"></button>
   </div>
 
-  <footer class="footer">
-		<div class="container clearfix">
-			<address class="address">
-				<p class="title">본사</p>
-				(우)12345 대전광역시 중구 계룡로 825 (용두동, 희영빌딩) 5층,6층/고객센터: 042-242-4412 	사업자등록번호: 305-86-06709
-			</address>
-			<p class="copyright">Copyright &copy JSL 인재개발원주식회사. All rights reserved.</p>
-		</div>
-</footer>
+	<footer class="footer">
+		<%@ include file="../common_footer.jsp" %>
+	</footer>
 	
 
  </body>

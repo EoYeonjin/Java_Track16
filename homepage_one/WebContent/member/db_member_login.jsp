@@ -11,21 +11,25 @@
 	
 	
 	String name = dao.getLoginName(id, password);
-	String msg = "", url = "";
+	String msg = "", url = "", level= "";
 	
 	if(name.equals("")){
 		msg = "ID나 비밀번호가 정확하지 않습니다";
 		url = "member_login.jsp";
-	}
-	else{
+	}else{
 		msg = name+"님 환영합니다";
 		url = "../index.jsp";
 		
 		int result = dao.setMemberLoginTime(id, CommonUtil.getTodayTime());
-		if(result != 1) System.out.print("회원 최종 로그인 시간 Update 오류"); 
+		if(result != 1) System.out.print("회원 최종 로그인 시간 Update 오류 db_member_login.jsp"); 
+		
+		if(id.equals("admin") || id.equals("manager")){
+			level = "top";
+		}
 		
 		session.setAttribute("sessionId", id);
 		session.setAttribute("sessionName", name);
+		session.setAttribute("sessionLevel", level);
 		session.setMaxInactiveInterval(30*60);
 	}
 %>    
