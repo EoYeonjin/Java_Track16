@@ -1,5 +1,43 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="dao.*, dto.*, java.util.*" %>
+<%
+	request.setCharacterEncoding("utf-8");
+	NoticeDao dao = new NoticeDao();
+	
+	String select = request.getParameter("t_select");
+	String search = request.getParameter("t_search");
+	
+	if(select == null){
+		select = "";
+		search = "";
+	}
+	
+	search = search.replace("'", "&#39;");
+			
+	ArrayList<NoticeDto> dtos = dao.getNoticeList(select, search);
+	
+	/* paging 설정 start*/
+	int totalCount = 5;
+	int list_setup_count = 2;  //한페이지당 출력 행수 
+	int pageNumber_count = 3;  //한페이지당 출력 페이지 갯수
+	
+	String nowPage = request.getParameter("t_nowPage");
+	int current_page = 0; // 현재페이지 번호
+	int total_page = 0;    // 전체 페이지 수
+	
+	if(nowPage == null || nowPage.equals("")) current_page = 1; 
+	else current_page = Integer.parseInt(nowPage);
+	
+	//totalCount = dao.getTotalCount(select,search);
+	total_page = totalCount / list_setup_count;  // 몫 : 2
+	int rest = 	totalCount % list_setup_count;   // 나머지:1
+	if(rest !=0) total_page = total_page + 1;     // 3
+	
+	int start = (current_page -1) * list_setup_count + 1;
+	int end   = current_page * list_setup_count;
+	/* paging 설정 end*/
+%>    
 <%@ include file="../common_header.jsp" %>
 <!-- sub contents -->
 	<div class="sub_title">
@@ -36,15 +74,16 @@
 	<div class="container">
 	  <div class="search_wrap">
 		<div class="record_group">
-			<p>총게시글<span><?=$count?></span>건</p>
+			<p>총게시글<span><%= dtos.size() %></span>건</p>
 		</div>
 		<div class="search_group">
-			<form name="myform" method="get" action="notice.html">
-				<select name="sel" class="select">
-					<option value="1">제목</option>
-					<option value="2">내용</option>
+			<form name="noti" method="post" action="notice_list.jsp">
+				<select name="t_select" class="select">
+					<option value="title" <%if(select.equals("")) out.print("selected"); %>>선택</option>
+					<option value="title" <%if(select.equals("title")) out.print("selected"); %>>제목</option>
+					<option value="content" <%if(select.equals("content")) out.print("selected"); %>>내용</option>
 				</select>
-				<input type="text" name="search" class="search_word">
+				<input type="text" name="t_search" value="<%=search %>" class="search_word">
 				<button class="btn_search" type="submit"><i class="fa fa-search"></i><span class="sr-only">검색버튼</span></button>
 			</form>
 		</div>
@@ -69,25 +108,29 @@
 				</tr>
 			</thead>
 			<tbody>
+			<%for(NoticeDto dto: dtos){ %>
 				<tr>
-					<td>8</td>
-					<td class="title"><a href="notice_view.jsp">입학절차에 대하여 알고 싶어요</a></td>
-					<td>관리자</td>
-					<td>18-10-16</td>
-					<td>187</td>
+					<td><%=dto.getNo() %></td>
+					<td class="title"><a href="notice_view.jsp"><%=dto.getTitle() %></a></td>
+					<td><%=dto.getReg_name() %></td>
+					<td><%=dto.getReg_date() %></td>
+					<td><%=dto.getHit() %></td>
 				</tr>
+			<%} %>	
 			</tbody>
 		</table>
 		<div class="paging">
+		<!--  
 			<a href=""><i class="fa  fa-angle-double-left"></i></a>
 			<a href=""><i class="fa fa-angle-left"></i></a>
-			<a href="" class="active">1</a>
+			<a href="" class='active'>1</a>
 			<a href="">2</a>
 			<a href="">3</a>
 			<a href="">4</a>
 			<a href="">5</a>
 			<a href=""><i class="fa fa-angle-right"></i></a>
 			<a href=""><i class="fa  fa-angle-double-right"></i></a>
+		-->	
 			<% if(sessionLevel.equals("top")){ %>
 				<a href="notice_write.jsp" class="btn_write">글쓰기</a>
 			<% } %>

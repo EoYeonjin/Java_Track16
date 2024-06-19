@@ -3,10 +3,10 @@
 <%@ include file="../common_header.jsp" %>
 <%@ page import="common.*" %>
 <% if(!sessionLevel.equals("top")) {%>    
-	<script type="text/javascript">
-		alert("관리자 화면입니다")
-		location.href="../index.jsp";
-	</script>
+		<script type="text/javascript">
+			alert("관리자 화면입니다")
+			location.href="../index.jsp";
+		</script>
 <% } %>
 <script type="text/javascript">
 	function goSave(){
