@@ -23,7 +23,20 @@ public class NoticeDto {
 		this.reg_date = reg_date;
 		this.hit = hit;
 	}
-
+	
+	//상세조회
+	public NoticeDto(String no, String title, String content, String reg_id, String reg_name, String reg_date,
+			int hit) {
+		super();
+		this.no = no;
+		this.title = title;
+		this.content = content;
+		this.reg_id = reg_id;
+		this.reg_name = reg_name;
+		this.reg_date = reg_date;
+		this.hit = hit;
+	}
+	
 	public String getNo() {
 		return no;
 	}
