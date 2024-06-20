@@ -1,3 +1,4 @@
+<%@page import="common.CommonUtil"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="dao.*, dto.*, java.util.*" %>
@@ -9,17 +10,15 @@
 	String search = request.getParameter("t_search");
 	
 	if(select == null){
-		select = "";
+		select = "title";
 		search = "";
 	}
 	
 	search = search.replace("'", "&#39;");
 			
-	ArrayList<NoticeDto> dtos = dao.getNoticeList(select, search);
-	
 	/* paging 설정 start*/
-	int totalCount = 5;
-	int list_setup_count = 2;  //한페이지당 출력 행수 
+	int totalCount = dao.getTotalCount(select,search);
+	int list_setup_count = 4;  //한페이지당 출력 행수 
 	int pageNumber_count = 3;  //한페이지당 출력 페이지 갯수
 	
 	String nowPage = request.getParameter("t_nowPage");
@@ -29,7 +28,6 @@
 	if(nowPage == null || nowPage.equals("")) current_page = 1; 
 	else current_page = Integer.parseInt(nowPage);
 	
-	//totalCount = dao.getTotalCount(select,search);
 	total_page = totalCount / list_setup_count;  // 몫 : 2
 	int rest = 	totalCount % list_setup_count;   // 나머지:1
 	if(rest !=0) total_page = total_page + 1;     // 3
@@ -37,8 +35,33 @@
 	int start = (current_page -1) * list_setup_count + 1;
 	int end   = current_page * list_setup_count;
 	/* paging 설정 end*/
+	
+	ArrayList<NoticeDto> dtos = dao.getNoticeList(select, search, start, end);
 %>    
 <%@ include file="../common_header.jsp" %>
+<script type="text/javascript">
+	function goPage(pageNumber){
+		pageForm.t_nowPage.value = pageNumber;
+		pageForm.method="post";
+		pageForm.action="notice_list.jsp";
+		pageForm.submit();
+	}
+	
+	function goView(no){
+		viewForm.t_no.value = no;
+		viewForm.method="post";
+		viewForm.action="notice_view.jsp";
+		viewForm.submit();
+	}
+</script>
+<form name="viewForm">
+	<input type="hidden" name="t_no">
+</form>
+<form name="pageForm">
+	<input type="hidden" name="t_nowPage">
+	<input type="hidden" name="t_select" value="<%=select %>">
+	<input type="hidden" name="t_search" value="<%=search %>">
+</form>
 <!-- sub contents -->
 	<div class="sub_title">
 		<h2>공지사항</h2>
@@ -74,12 +97,11 @@
 	<div class="container">
 	  <div class="search_wrap">
 		<div class="record_group">
-			<p>총게시글<span><%= dtos.size() %></span>건</p>
+			<p>총게시글<span><%= totalCount %></span>건</p>
 		</div>
 		<div class="search_group">
 			<form name="noti" method="post" action="notice_list.jsp">
 				<select name="t_select" class="select">
-					<option value="title" <%if(select.equals("")) out.print("selected"); %>>선택</option>
 					<option value="title" <%if(select.equals("title")) out.print("selected"); %>>제목</option>
 					<option value="content" <%if(select.equals("content")) out.print("selected"); %>>내용</option>
 				</select>
@@ -111,7 +133,7 @@
 			<%for(NoticeDto dto: dtos){ %>
 				<tr>
 					<td><%=dto.getNo() %></td>
-					<td class="title"><a href="notice_view.jsp"><%=dto.getTitle() %></a></td>
+					<td class="title"><a href="javascript:goView('<%=dto.getNo() %>')"><%=dto.getTitle() %></a></td>
 					<td><%=dto.getReg_name() %></td>
 					<td><%=dto.getReg_date() %></td>
 					<td><%=dto.getHit() %></td>
@@ -120,13 +142,17 @@
 			</tbody>
 		</table>
 		<div class="paging">
+		<%
+			String pageDis = CommonUtil.pageListPost(current_page, total_page, pageNumber_count);
+			out.print(pageDis);
+		%>
 		<!--  
 			<a href=""><i class="fa  fa-angle-double-left"></i></a>
 			<a href=""><i class="fa fa-angle-left"></i></a>
 			<a href="" class='active'>1</a>
-			<a href="">2</a>
-			<a href="">3</a>
-			<a href="">4</a>
+			<a href='notice_list.jsp'>2</a>
+			<a href='notice_list.jsp'>3</a>
+			<a href='notice_list.jsp'>4</a>
 			<a href="">5</a>
 			<a href=""><i class="fa fa-angle-right"></i></a>
 			<a href=""><i class="fa  fa-angle-double-right"></i></a>

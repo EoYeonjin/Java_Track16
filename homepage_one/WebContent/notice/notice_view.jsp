@@ -1,5 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="dao.*, dto.*" %>
+<%
+	NoticeDao dao = new NoticeDao();
+	String no = request.getParameter("t_no");
+	
+	NoticeDto dto = dao.getNoticeView(no);
+%>    
 <%@ include file="../common_header.jsp" %>    
 	<!-- sub contents -->
 	<div class="sub_title">
@@ -35,13 +42,10 @@
 
 	<div class="container">
 		<div class="board_view">
-			<h2>[공지] 공지제목이 출력됩니다</h2>
-			<p class="info"><span class="user">홍길동</span> | 2018-10-18 | <i class="fa fa-eye"></i> 321</p>
+			<h2><%=dto.getTitle() %></h2>
+			<p class="info"><span class="user"><%=dto.getReg_name() %></span> | <%=dto.getReg_date() %> | <i class="fa fa-eye"></i> <%=dto.getHit() %></p>
 			<div class="board_body">
-				<p>공지사항 내용이 출력됩니다</p>
-				<p>안녕하세요 JSL인재개발원입니다.</p>
-				<p>일본해외취업에 또는 K-Move 연수에 관심이 있으신분들은</p>
-				<p>일본해외취업설명회 동영상을 통해 궁금증을 해결하시길 바라겠습니다.</p>
+				<%=dto.getContent() %>
 			</div>
 			<div class="prev_next">
 				<a href="" class="btn_prev"><i class="fa fa-angle-left"></i>
@@ -50,7 +54,9 @@
 				</span>
 				</a>
 				<div class="btn_3wrap">
-					<a href="notice_list.jsp">목록</a> <a href="notice_update.jsp">수정</a> <a href="notice_delete.html" onClick="return confirm('삭제하시겠어요?')">삭제</a>
+					<a href="notice_list.jsp">목록</a> 
+					<a href="notice_update.jsp">수정</a> 
+					<a href="notice_delete.html" onClick="return confirm('삭제하시겠어요?')">삭제</a>
 				</div>
 				<a href="" class="btn_next">
 				<span class="next_wrap">
