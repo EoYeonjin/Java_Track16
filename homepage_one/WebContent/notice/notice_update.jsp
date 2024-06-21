@@ -1,14 +1,37 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ include file="../common_header.jsp" %>    
-	<!-- sub contents -->
+<%@ page import="dao.*, dto.*" %>
+<%
+	NoticeDao dao = new NoticeDao();
+	String no = request.getParameter("t_no");
+	NoticeDto dto = dao.getNoticeView(no);
+%>    
+<%@ include file="../common_header.jsp" %>
+<%@ page import="common.*" %>
+<% if(!sessionLevel.equals("top")) {%>    
+		<script type="text/javascript">
+			alert("관리자 화면입니다")
+			location.href="../index.jsp";
+		</script>
+<% } %>
+<script type="text/javascript">
+	function goUpdate(){
+		if(checkValueLength(noti.t_title, 5, 40, "제목을 입력해주세요", '제목은 5자 이상 40자 이내로 입력해주세요\n현재자릿수: ')) return;
+		if(checkValueLength(noti.t_content, 1, 800, "내용을 입력해주세요", '내용은 1자 이상 800자 이내로 입력해주세요\n현재자릿수: ')) return;
+		
+		noti.method="post";
+		noti.action="db_notice_update.jsp";
+		noti.submit();
+	}
+</script>
+<!-- sub contents -->
 	<div class="sub_title">
 		<h2>공지사항</h2>
 		<div class="container">
 		  <div class="location">
 			<ul>
 				<li class="btn_home">
-					<a href="index.html"><i class="fa fa-home btn_plus"></i></a>
+					<a href="../index.jsp"><i class="fa fa-home btn_plus"></i></a>
 				</li>
 				<li class="dropdown">
 					<a href="">커뮤니티<i class="fa fa-plus btn_plus"></i></a>
@@ -36,8 +59,9 @@
 	<div class="container">
 	  <div class="write_wrap">
 	  <h2 class="sr-only">공지사항 글쓰기</h2>
-	  <form name="notice" method="post" action="notice_insert.html" onsubmit="return check()">
 	  <!-- action을 처리하기전에 check()사용자 함수를 실행하고 되돌아 와라-->
+	  	<form name="noti">
+	  		<input type="hidden" name="t_no" value="<%=no %>">
 			<table class="bord_table">
 				<caption class="sr-only">공지사항 입력 표</caption>
 				<colgroup>
@@ -46,51 +70,34 @@
 				</colgroup>
 				<tbody>
 					<tr class="first">
-						<th>글쓴이</th>
-						<td><input type="text" name="writer"></td>
-					</tr>
-					<tr>
 						<th>제목</th>
-						<td><input type="text" name="title"></td>
+						<td colspan="3"><input type="text" name="t_title" value="<%=dto.getTitle() %>"></td>
 					</tr>
 					<tr>
 						<th>내용</th>
-						<td><textarea name="contents"></textarea></td>
+						<td colspan="3"><textarea name="t_content"><%=dto.getContent() %></textarea></td>
 					</tr>
 					<tr>
 						<th>첨부</th>
-						<td><input type="file" name="photo"></td>
+						<td colspan="3"><input type="file" name="t_attach"></td>
+					</tr>
+					<tr>
+						<th>글쓴이</th>
+						<td><%=sessionName %></td>
+						<th>등록 일자</th>
+						<td><%=dto.getReg_date() %></td>
 					</tr>
 				</tbody>
 			</table>
+			</form>
 			<div class="btn_wrap">
-				<input type="submit" value="저장" class="btn_ok">&nbsp;&nbsp;<input type="reset" value="다시쓰기" class="btn_reset">&nbsp;&nbsp;<input type="button" value="목록" class="btn_list" onClick="location.href='notice.html';">
+				<input type="button" value="수정저장" class="btn_ok" onclick="goUpdate()">&nbsp;&nbsp;
+				<input type="button" value="목록" class="btn_list" onClick="location.href='notice_list.jsp';">
 			</div>
-		</form>
 	  </div>
 	  
 	</div>
 	<!-- end contents -->
-	<script>
-		function check() {
-			if(notice.writer.value=="") {
-				alert("글쓴이 입력");
-				notice.writer.focus();
-				return false;
-			}
-			if(notice.title.value=="") {
-				alert("제목을 입력");
-				notice.title.focus();
-				return false;
-			}
-			if(notice.contents.value=="") {
-				alert("내용을 입력");
-				notice.contents.focus();
-				return false;
-			}
-			return true;
-		}
-	</script>
 	<script>
 		$(function() {
 			$(".location  .dropdown > a").on("click",function(e) {
@@ -105,6 +112,7 @@
 		});
 	</script>
 	
+
 	<footer class="footer">
 		<%@ include file="../common_footer.jsp" %>
 	</footer>

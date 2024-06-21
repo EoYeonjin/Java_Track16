@@ -5,9 +5,33 @@
 	NoticeDao dao = new NoticeDao();
 	String no = request.getParameter("t_no");
 	
+	int hitCount = dao.setHitCount(no);
+	if(hitCount != 1) System.out.print("공지사항 조회수 증가 오류");
 	NoticeDto dto = dao.getNoticeView(no);
+	
+	NoticeDto preDto = dao.getPreNotice(no);
+	NoticeDto nexDto = dao.getNextNotice(no);
+	
+	
 %>    
-<%@ include file="../common_header.jsp" %>    
+<%@ include file="../common_header.jsp" %>   
+<script type="text/javascript">
+	function goView(no){
+		noti.t_no.value = no;
+		noti.method="post";
+		noti.action="notice_view.jsp";
+		noti.submit();
+	}
+	
+	function goUpdateForm(){
+		noti.method="post";
+		noti.action="notice_update.jsp";
+		noti.submit();
+	}
+</script>
+<form name="noti">
+	<input type="hidden" name="t_no" value="<%=no %>">
+</form> 
 	<!-- sub contents -->
 	<div class="sub_title">
 		<h2>공지사항</h2>
@@ -45,24 +69,57 @@
 			<h2><%=dto.getTitle() %></h2>
 			<p class="info"><span class="user"><%=dto.getReg_name() %></span> | <%=dto.getReg_date() %> | <i class="fa fa-eye"></i> <%=dto.getHit() %></p>
 			<div class="board_body">
-				<%=dto.getContent() %>
+				<textarea readonly><%=dto.getContent() %></textarea>
 			</div>
 			<div class="prev_next">
-				<a href="" class="btn_prev"><i class="fa fa-angle-left"></i>
+			<%if(preDto != null) { %>
+				<a href="javascript:goView('<%=preDto.getNo() %>')" class="btn_prev"><i class="fa fa-angle-left"></i>
 				<span class="prev_wrap">
-					<strong>이전글</strong><span>이전글제목표시</span>
+					<strong>이전글</strong>
+					<span>
+						<%
+							String preTitle = preDto.getTitle();
+							if(preTitle.length() > 15) preTitle = preTitle.substring(0, 15)+"...";
+							out.print(preTitle);
+						%>
+					</span>
 				</span>
 				</a>
+			<%} else{%>
+				<a><i class="fa fa-angle-left"></i>
+				<span class="prev_wrap">
+					<span>이전글이 존재하지 않습니다</span>
+				</span>
+				</a>
+			<%} %>	
 				<div class="btn_3wrap">
 					<a href="notice_list.jsp">목록</a> 
-					<a href="notice_update.jsp">수정</a> 
-					<a href="notice_delete.html" onClick="return confirm('삭제하시겠어요?')">삭제</a>
+					<%if(sessionId.equals(dto.getReg_id())){ %>
+						<a href="javascript:goUpdateForm()">수정</a> 
+						<a href="javascript:goDelete()">삭제</a>
+					<%} %>
 				</div>
-				<a href="" class="btn_next">
+			<%if(nexDto != null) { %>	
+				<a href="javascript:goView('<%=nexDto.getNo() %>')" class="btn_next">
 				<span class="next_wrap">
-					<strong>다음글</strong><span>다음글제목표시</span>
+					<strong>다음글</strong>
+					<span>
+						<%
+							String nextTitle = nexDto.getTitle();
+							if(nextTitle.length() > 15) nextTitle = nextTitle.substring(0, 15)+"...";
+							out.print(nextTitle);
+						%>
+					</span>
 				</span>
 				<i class="fa fa-angle-right"></i></a>
+			<%} else{%>
+				<a class="btn_next">
+				<span class="next_wrap">
+					<strong>다음글</strong>
+					<span>다음글이 존재하지 않습니다</span>
+				</span>
+				<i class="fa fa-angle-right"></i></a>
+			<%} %>		
 			</div>
 		</div>
 	</div>
