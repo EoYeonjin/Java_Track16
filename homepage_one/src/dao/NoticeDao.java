@@ -159,4 +159,110 @@ public class NoticeDao {
 		
 		return dto;
 	}
+	
+	//hit 수
+	public int setHitCount(String no) {
+		int result = 0;
+		String query = "update jsl_어연진_notice \r\n" + 
+				"set hit = hit + 1\r\n" + 
+				"where no = '"+no+"'";
+		
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement(query);
+			result = ps.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println("setHitCount() method error\n"+query);
+			e.printStackTrace();
+		} finally {
+			DBConnection.closeDB(con, ps, rs);
+		}
+		
+		return result;
+	}
+	
+	//이전글
+	public NoticeDto getPreNotice(String no) {
+		NoticeDto dto = null;
+		String query = "select a.no, b.title\r\n" + 
+				"from\r\n" + 
+				"    (select max(to_number(no)) as no\r\n" + 
+				"    from jsl_어연진_notice\r\n" + 
+				"    where no < "+no+") a, jsl_어연진_notice b\r\n" + 
+				"where a. no = b.no";
+		
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement(query);
+			rs = ps.executeQuery();
+			
+			if(rs.next()) {
+				no = rs.getString("no");
+				String title = rs.getString("title");
+				
+				dto = new NoticeDto(no, title);
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("getPreNotice() method error\n"+query);
+			e.printStackTrace();
+		} finally {
+			DBConnection.closeDB(con, ps, rs);
+		}
+		
+		return dto;
+	}
+	
+	//다음글
+	public NoticeDto getNextNotice(String no) {
+		NoticeDto dto = null;
+		String query = "select a.no, b.title\r\n" + 
+				"from\r\n" + 
+				"    (select min(to_number(no)) as no\r\n" + 
+				"    from jsl_어연진_notice\r\n" + 
+				"    where no > "+no+") a, jsl_어연진_notice b\r\n" + 
+				"where a. no = b.no";
+		
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement(query);
+			rs = ps.executeQuery();
+			
+			if(rs.next()) {
+				no = rs.getString("no");
+				String title = rs.getString("title");
+				
+				dto = new NoticeDto(no, title);
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("getNextNotice() method error\n"+query);
+			e.printStackTrace();
+		} finally {
+			DBConnection.closeDB(con, ps, rs);
+		}
+		
+		return dto;
+	}
+	
+	//수정
+	public int noticeUpdate(NoticeDto dto) {
+		int result = 0;
+		String query = "update JSL_어연진_NOTICE set\r\n" + 
+				"title = '"+dto.getTitle()+"', content = '"+dto.getContent()+"'\r\n" + 
+				"where no = '"+dto.getNo()+"'";
+		
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement(query);
+			result = ps.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println("noticeUpdate() method error\n"+query);
+			e.printStackTrace();
+		} finally {
+			DBConnection.closeDB(con, ps, rs);
+		}
+		
+		return result;
+	}
 }

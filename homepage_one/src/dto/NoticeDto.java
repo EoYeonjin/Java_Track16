@@ -4,7 +4,14 @@ public class NoticeDto {
 	private String no, title, content, attach, reg_id, reg_name, reg_date;
 	private int hit;
 	
-	//저장
+	//이전글, 다음글
+	public NoticeDto(String no, String title) {
+		super();
+		this.no = no;
+		this.title = title;
+	}
+	
+	//저장, 수정
 	public NoticeDto(String no, String title, String content, String reg_id, String reg_date) {
 		super();
 		this.no = no;
