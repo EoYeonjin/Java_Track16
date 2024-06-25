@@ -7,18 +7,18 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import common.DBConnection;
-import dto.NoticeDto;
+import dto.NewsDto;
 
-public class NoticeDao {
+public class NewsDao {
 	Connection con;
 	PreparedStatement ps;
 	ResultSet rs;
 	
-	//게시글 no생성
+	//번호생성
 	public String getNo() {
 		String no = "";
-		String query = "select nvl(max(to_number(no)), '0') + 1 as no \r\n" + 
-				"from jsl_어연진_notice";
+		String query = "select nvl(max(no), '0000') + 1 as no\r\n" + 
+				"from JSL_어연진_NEWS";
 		
 		try {
 			con = DBConnection.getConnection();
@@ -39,13 +39,14 @@ public class NoticeDao {
 	}
 	
 	//등록
-	public int noticeSave(NoticeDto dto) {
+	public int newsSave(NewsDto dto) {
 		int result = 0;
-		String query= "insert into jsl_어연진_notice\r\n" + 
-				"(no, title, content, reg_id, reg_date)\r\n" + 
+		String query = "insert into jsl_어연진_news\r\n" + 
+				"(no, title, content, reg_id, reg_date, ipt)\r\n" + 
 				"values\r\n" + 
-				"('"+dto.getNo()+"','"+dto.getTitle()+"', '"+dto.getContent()+"', '"+dto.getReg_id()+"',\r\n" + 
-				"to_date('"+dto.getReg_date()+"','yyyy-MM-dd hh24:mi:ss')\r\n" + 
+				"('"+dto.getNo()+"', '"+dto.getTitle()+"', '"+dto.getContent()+"', '"+dto.getReg_id()+"',\r\n" + 
+				"to_date('"+dto.getReg_date()+"','yyyy-MM-dd hh24:mi:ss'),\r\n" + 
+				"'"+dto.getIpt()+"'\r\n" + 
 				")";
 		
 		try {
@@ -53,7 +54,7 @@ public class NoticeDao {
 			ps = con.prepareStatement(query);
 			result = ps.executeUpdate();
 		} catch (SQLException e) {
-			System.out.println("noticeSave() method error\n"+query);
+			System.out.println("newsSave() method error\n"+query);
 			e.printStackTrace();
 		} finally {
 			DBConnection.closeDB(con, ps, rs);
@@ -62,18 +63,18 @@ public class NoticeDao {
 		return result;
 	}
 	
-	//목록조회
-	public ArrayList<NoticeDto> getNoticeList(String select, String search, int start, int end){
-		ArrayList<NoticeDto> dtos = new ArrayList<>();
+	//조회
+	public ArrayList<NewsDto> getNewsList(String select, String search, int start, int end){
+		ArrayList<NewsDto> dtos = new ArrayList<>();
 		String query = "select * from(\r\n" + 
 				"    select rownum as rnum, tbl.*\r\n" + 
 				"    from(\r\n" + 
-				"        select n.no, n.title, m.name as reg_name, \r\n" + 
+				"        select n.no, n.title, m.name as reg_name, n.ipt, \r\n" + 
 				"        to_char(n.reg_date, 'yyyy-MM-dd') as reg_date, n.hit\r\n" + 
-				"        from jsl_어연진_member m, jsl_어연진_notice n\r\n" + 
+				"        from jsl_어연진_member m, jsl_어연진_news n\r\n" + 
 				"        where m.id = n.reg_id\r\n" + 
-				"        and "+select+" like '%"+search+"%'\r\n" + 
-				"        order by to_number(no) desc\r\n" + 
+				"        and n."+select+" like '%"+search+"%'\r\n" + 
+				"        order by decode(ipt, 'i', '1'), to_number(no) desc\r\n" + 
 				") tbl)\r\n" + 
 				"where rnum>= "+start+" and rnum<="+end;
 		
@@ -87,12 +88,13 @@ public class NoticeDao {
 				String title = rs.getString("title");
 				String reg_name = rs.getString("reg_name");
 				String reg_date = rs.getString("reg_date");
+				String ipt = rs.getString("ipt");
 				int hit = rs.getInt("hit");
 				
-				dtos.add(new NoticeDto(no, title, reg_name, reg_date, hit));
+				dtos.add(new NewsDto(no, title, reg_name, reg_date, ipt, hit));
 			}
 		} catch (SQLException e) {
-			System.out.println("getNoticeList() method error\n"+query);
+			System.out.println("getNewsList() method error\n"+query);
 			e.printStackTrace();
 		} finally {
 			DBConnection.closeDB(con, ps, rs);
@@ -101,11 +103,11 @@ public class NoticeDao {
 		return dtos;
 	}
 	
-	//목록 건수
+	//목록건수
 	public int getTotalCount(String select, String search) {
-		int count = 0;
+		int totalCount = 0;
 		String query = "select count(*) as count\r\n" + 
-				"from jsl_어연진_notice\r\n" + 
+				"from JSL_어연진_NEWS\r\n" + 
 				"where "+select+" like '%"+search+"%'";
 		
 		try {
@@ -114,7 +116,7 @@ public class NoticeDao {
 			rs = ps.executeQuery();
 			
 			if(rs.next()) {
-				count = rs.getInt("count");
+				totalCount = rs.getInt("count");
 			}
 		} catch (SQLException e) {
 			System.out.println("getTotalCount() method error\n"+query);
@@ -123,17 +125,17 @@ public class NoticeDao {
 			DBConnection.closeDB(con, ps, rs);
 		}
 		
-		return count;
+		return totalCount;
 	}
 	
 	//상세조회
-	public NoticeDto getNoticeView(String no) {
-		NoticeDto dto = null;
-		String query = "select n.title, n.reg_id, m.name as reg_name, n.content, n.hit,\r\n" + 
+	public NewsDto getNewsView(String no) {
+		NewsDto dto = null;
+		String query = "select n.title, n.content, m.name as reg_name, n.hit, n.ipt,\r\n" + 
 				"to_char(n.reg_date, 'yyyy-MM-dd') as reg_date\r\n" + 
-				"from jsl_어연진_member m, jsl_어연진_notice n\r\n" + 
-				"where m.id = n.reg_id \r\n" + 
-				"and no = '"+no+"'";
+				"from JSL_어연진_MEMBER m, JSL_어연진_NEWS n\r\n" + 
+				"where m.id = n.reg_id\r\n" + 
+				"and n.no like '%"+no+"%'";
 		
 		try {
 			con = DBConnection.getConnection();
@@ -143,15 +145,15 @@ public class NoticeDao {
 			if(rs.next()) {
 				String title = rs.getString("title");
 				String content = rs.getString("content");
-				String reg_id = rs.getString("reg_id");
 				String reg_name = rs.getString("reg_name");
 				String reg_date = rs.getString("reg_date");
+				String ipt = rs.getString("ipt");
 				int hit = rs.getInt("hit");
 				
-				dto = new NoticeDto(no, title, content, reg_id, reg_name, reg_date, hit);
+				dto = new NewsDto(no, title, content, reg_name, reg_date, ipt, hit);
 			}
 		} catch (SQLException e) {
-			System.out.println("getNoticeView() method error\n"+query);
+			System.out.println("getNewsView() method error\n"+query);
 			e.printStackTrace();
 		} finally {
 			DBConnection.closeDB(con, ps, rs);
@@ -160,96 +162,32 @@ public class NoticeDao {
 		return dto;
 	}
 	
-	//hit 수
-	public int setHitCount(String no) {
-		int result = 0;
-		String query = "update jsl_어연진_notice \r\n" + 
+	//조회수 
+	public int updateHit(String no) {
+		int hitCount = 0;
+		String query = "update  JSL_어연진_NEWS\r\n" + 
 				"set hit = hit + 1\r\n" + 
 				"where no = '"+no+"'";
 		
 		try {
 			con = DBConnection.getConnection();
 			ps = con.prepareStatement(query);
-			result = ps.executeUpdate();
+			hitCount = ps.executeUpdate();
 		} catch (SQLException e) {
-			System.out.println("setHitCount() method error\n"+query);
+			System.out.println("updateHit() method error\n"+query);
 			e.printStackTrace();
 		} finally {
 			DBConnection.closeDB(con, ps, rs);
 		}
 		
-		return result;
-	}
-	
-	//이전글
-	public NoticeDto getPreNotice(String no) {
-		NoticeDto dto = null;
-		String query = "select a.no, b.title\r\n" + 
-				"from\r\n" + 
-				"    (select max(to_number(no)) as no\r\n" + 
-				"    from jsl_어연진_notice\r\n" + 
-				"    where no < "+no+") a, jsl_어연진_notice b\r\n" + 
-				"where a. no = b.no";
-		
-		try {
-			con = DBConnection.getConnection();
-			ps = con.prepareStatement(query);
-			rs = ps.executeQuery();
-			
-			if(rs.next()) {
-				no = rs.getString("no");
-				String title = rs.getString("title");
-				
-				dto = new NoticeDto(no, title);
-			}
-			
-		} catch (SQLException e) {
-			System.out.println("getPreNotice() method error\n"+query);
-			e.printStackTrace();
-		} finally {
-			DBConnection.closeDB(con, ps, rs);
-		}
-		
-		return dto;
-	}
-	
-	//다음글
-	public NoticeDto getNextNotice(String no) {
-		NoticeDto dto = null;
-		String query = "select a.no, b.title\r\n" + 
-				"from\r\n" + 
-				"    (select min(to_number(no)) as no\r\n" + 
-				"    from jsl_어연진_notice\r\n" + 
-				"    where no > "+no+") a, jsl_어연진_notice b\r\n" + 
-				"where a. no = b.no";
-		
-		try {
-			con = DBConnection.getConnection();
-			ps = con.prepareStatement(query);
-			rs = ps.executeQuery();
-			
-			if(rs.next()) {
-				no = rs.getString("no");
-				String title = rs.getString("title");
-				
-				dto = new NoticeDto(no, title);
-			}
-			
-		} catch (SQLException e) {
-			System.out.println("getNextNotice() method error\n"+query);
-			e.printStackTrace();
-		} finally {
-			DBConnection.closeDB(con, ps, rs);
-		}
-		
-		return dto;
+		return hitCount;
 	}
 	
 	//수정
-	public int noticeUpdate(NoticeDto dto) {
+	public int newsUpdate(NewsDto dto) {
 		int result = 0;
-		String query = "update JSL_어연진_NOTICE set\r\n" + 
-				"title = '"+dto.getTitle()+"', content = '"+dto.getContent()+"'\r\n" + 
+		String query = "update  JSL_어연진_NEWS\r\n" + 
+				"set title = '"+dto.getTitle()+"', content = '"+dto.getContent()+"', ipt = '"+dto.getIpt()+"'\r\n" + 
 				"where no = '"+dto.getNo()+"'";
 		
 		try {
@@ -257,7 +195,7 @@ public class NoticeDao {
 			ps = con.prepareStatement(query);
 			result = ps.executeUpdate();
 		} catch (SQLException e) {
-			System.out.println("noticeUpdate() method error\n"+query);
+			System.out.println("newsUpdate() method error\n"+query);
 			e.printStackTrace();
 		} finally {
 			DBConnection.closeDB(con, ps, rs);
@@ -267,9 +205,9 @@ public class NoticeDao {
 	}
 	
 	//삭제
-	public int noticeDelete(String no) {
+	public int newsDelete(String no) {
 		int result = 0;
-		String query = "delete from JSL_어연진_NOTICE\r\n" + 
+		String query = "delete from JSL_어연진_News\r\n" + 
 				"where no = '"+no+"'";
 		
 		try {
@@ -277,12 +215,75 @@ public class NoticeDao {
 			ps = con.prepareStatement(query);
 			result = ps.executeUpdate();
 		} catch (SQLException e) {
-			System.out.println("noticeUpdate() method error\n"+query);
+			System.out.println("newsDelete() method error\n"+query);
 			e.printStackTrace();
 		} finally {
 			DBConnection.closeDB(con, ps, rs);
 		}
 		
 		return result;
+	}
+	
+	//이전글
+	public NewsDto getPreNews(String no) {
+		NewsDto dto = null;
+		String query = "select a.no, b.title\r\n" + 
+				"from\r\n" + 
+				"    (select max(to_number(no)) as no\r\n" + 
+				"    from jsl_어연진_news\r\n" + 
+				"    where no < "+no+") a, jsl_어연진_news b\r\n" + 
+				"where a. no = b.no";
+		
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement(query);
+			rs = ps.executeQuery();
+			
+			if(rs.next()) {
+				no = rs.getString("no");
+				String title = rs.getString("title");
+				
+				dto = new NewsDto(no, title);
+			}
+		} catch (SQLException e) {
+			System.out.println("getPreNews() method error\n"+query);
+			e.printStackTrace();
+		} finally {
+			DBConnection.closeDB(con, ps, rs);
+		}
+		
+		return dto;
+	}
+	
+	//다음글
+	public NewsDto getNextNews(String no) {
+		NewsDto dto = null;
+		String query = "select a.no, b.title\r\n" + 
+				"from\r\n" + 
+				"    (select min(to_number(no)) as no\r\n" + 
+				"    from jsl_어연진_news\r\n" + 
+				"    where no > "+no+") a, jsl_어연진_news b\r\n" + 
+				"where a. no = b.no";
+		
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement(query);
+			rs = ps.executeQuery();
+			
+			if(rs.next()) {
+				no = rs.getString("no");
+				String title = rs.getString("title");
+				
+				dto = new NewsDto(no, title);
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("getNextNews() method error\n"+query);
+			e.printStackTrace();
+		} finally {
+			DBConnection.closeDB(con, ps, rs);
+		}
+		
+		return dto;
 	}
 }
