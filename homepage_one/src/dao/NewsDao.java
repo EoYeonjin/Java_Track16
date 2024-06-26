@@ -225,13 +225,13 @@ public class NewsDao {
 	}
 	
 	//이전글
-	public NewsDto getPreNews(String no) {
+	public NewsDto getPreNews(String no, String ipt) {
 		NewsDto dto = null;
 		String query = "select a.no, b.title\r\n" + 
 				"from\r\n" + 
 				"    (select max(to_number(no)) as no\r\n" + 
 				"    from jsl_어연진_news\r\n" + 
-				"    where no < "+no+") a, jsl_어연진_news b\r\n" + 
+				"    where no < "+no+" and ipt = '"+ipt+"') a, jsl_어연진_news b\r\n" + 
 				"where a. no = b.no";
 		
 		try {
@@ -243,7 +243,7 @@ public class NewsDao {
 				no = rs.getString("no");
 				String title = rs.getString("title");
 				
-				dto = new NewsDto(no, title);
+				dto = new NewsDto(no, title, ipt);
 			}
 		} catch (SQLException e) {
 			System.out.println("getPreNews() method error\n"+query);
@@ -256,13 +256,13 @@ public class NewsDao {
 	}
 	
 	//다음글
-	public NewsDto getNextNews(String no) {
+	public NewsDto getNextNews(String no, String ipt) {
 		NewsDto dto = null;
 		String query = "select a.no, b.title\r\n" + 
 				"from\r\n" + 
 				"    (select min(to_number(no)) as no\r\n" + 
 				"    from jsl_어연진_news\r\n" + 
-				"    where no > "+no+") a, jsl_어연진_news b\r\n" + 
+				"    where no > "+no+" and ipt='"+ipt+"') a, jsl_어연진_news b\r\n" + 
 				"where a. no = b.no";
 		
 		try {
@@ -274,7 +274,7 @@ public class NewsDao {
 				no = rs.getString("no");
 				String title = rs.getString("title");
 				
-				dto = new NewsDto(no, title);
+				dto = new NewsDto(no, title, ipt);
 			}
 			
 		} catch (SQLException e) {

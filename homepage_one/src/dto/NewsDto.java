@@ -3,12 +3,13 @@ package dto;
 public class NewsDto {
 	private String no, title, content, reg_id, reg_name, reg_date, ipt;
 	private int hit;
-	
+
 	//이전, 다음글
-	public NewsDto(String no, String title) {
+	public NewsDto(String no, String title, String ipt) {
 		super();
 		this.no = no;
 		this.title = title;
+		this.ipt = ipt;
 	}
 
 	//수정
