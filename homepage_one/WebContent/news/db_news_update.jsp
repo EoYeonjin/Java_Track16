@@ -7,7 +7,9 @@
 
 	String no = request.getParameter("t_no");
 	String title = request.getParameter("t_title");
+	title = title.replace("'", "&#39;");	
 	String content = request.getParameter("t_content");
+	content = content.replace("'", "&#39;");
 	String ipt = request.getParameter("t_ipt");
 	
 	NewsDto dto = new NewsDto(no, title, content, ipt);

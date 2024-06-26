@@ -8,6 +8,12 @@
 	NewsDto dto = dao.getNewsView(no);
 %>    
 <%@ include file="../common_header.jsp" %>  
+<% if(!sessionLevel.equals("top")) {%>    
+		<script type="text/javascript">
+			alert("관리자 화면입니다")
+			location.href="../index.jsp";
+		</script>
+<% } %>
 <script type="text/javascript">
 	function goUpdate(){
 		if(checkValueLength(news.t_title, 5, 40, "제목을 입력해주세요", '제목은 5자 이상 40자 이내로 입력해주세요\n현재자릿수: ')) return;
@@ -73,10 +79,18 @@
 					</tr>
 					<tr>
 						<th>제목</th>
-						<td colspan="3"><input type="text" name="t_title" value="<%=dto.getTitle() %>"></td>
+							<%
+								String title = dto.getTitle();
+								title = title.replace("\"", "&quot;");
+							%>
+						<td colspan="3"><input type="text" name="t_title" value="<%=title %>"></td>
 					</tr>
 					<tr>
 						<th>내용</th>
+							<%
+								String content = dto.getContent();
+								content = content.replace("\"", "&quot;");
+							%>
 						<td colspan="3"><textarea name="t_content"><%=dto.getContent() %></textarea></td>
 					</tr>
 					<tr>

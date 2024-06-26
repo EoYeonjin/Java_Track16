@@ -39,8 +39,9 @@
 %>    
 <%@ include file="../common_header.jsp" %>
 <script type="text/javascript">
-	function goView(no){
+	function goView(no, ipt){
 		viewForm.t_no.value = no;
+		viewForm.t_ipt.value = ipt;
 		
 		viewForm.method="post";
 		viewForm.action="news_view.jsp";
@@ -56,6 +57,7 @@
 </script>
 <form name="viewForm">
 	<input type="hidden" name="t_no">
+	<input type="hidden" name="t_ipt">
 </form>
 <form name="pageForm">
 	<input type="hidden" name="t_nowPage">
@@ -142,7 +144,7 @@
 							else out.print("[중요]");	
 						%>
 					</td>
-					<td class="title"><a href="javascript:goView('<%=dto.getNo() %>')"><%=dto.getTitle() %></a></td>
+					<td class="title"><a href="javascript:goView('<%=dto.getNo() %>', '<%=dto.getIpt() %>')"><%=dto.getTitle() %></a></td>
 					<td><%=dto.getReg_name() %></td>
 					<td><%=dto.getReg_date() %></td>
 					<td><%=dto.getHit() %></td>

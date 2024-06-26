@@ -1,17 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="dao.*, dto.*" %>    
+<%@ page import="dao.*, dto.*, java.util.*" %>    
 <%
 	NewsDao dao = new NewsDao();
 
 	String no = request.getParameter("t_no");
+	String ipt = request.getParameter("t_ipt");
 	
 	int hitCount = dao.updateHit(no);
 	if(hitCount != 1) System.out.print("NEWS 조회수 증가 오류");
 	NewsDto dto = dao.getNewsView(no);
 	
-	NewsDto preDto = dao.getPreNews(no);
-	NewsDto nexDto = dao.getNextNews(no);
+	NewsDto preDto = dao.getPreNews(no, ipt);
+	NewsDto nexDto = dao.getNextNews(no, ipt);
 %>
 <%@ include file="../common_header.jsp" %>
 <script type="text/javascript">
@@ -29,8 +30,9 @@
 		}
 	}
 	
-	function goView(no){
+	function goView(no, ipt){
 		news.t_no.value = no;
+		news.t_ipt.value = ipt;
 		
 		news.method="post";
 		news.action="news_view.jsp";
@@ -39,6 +41,7 @@
 </script>
 <form name="news">
 	<input type="hidden" name="t_no" value="<%=no %>">
+	<input type="hidden" name="t_ipt" value="<%=ipt %>">
 </form>
 	<!-- sub contents -->
 	<div class="sub_title">
@@ -82,7 +85,7 @@
 			</div>
 			<div class="prev_next">
 			<%if(preDto != null){ %>
-				<a href="javascript:goView('<%=preDto.getNo() %>')" class="btn_prev"><i class="fa fa-angle-left"></i>
+				<a href="javascript:goView('<%=preDto.getNo() %>', '<%=preDto.getIpt() %>')" class="btn_prev"><i class="fa fa-angle-left"></i>
 				<span class="prev_wrap">
 					<strong>이전글</strong>
 					<span>
@@ -109,7 +112,7 @@
 						<%} %>
 					</div>
 				<%if(nexDto != null){ %>
-				<a href="javascript:goView('<%=nexDto.getNo() %>')" class="btn_next">
+				<a href="javascript:goView('<%=nexDto.getNo() %>', '<%=nexDto.getIpt() %>')" class="btn_next">
 				<span class="next_wrap">
 					<strong>다음글</strong>
 					<span>
@@ -124,10 +127,9 @@
 				<%} else{ %>
 					<a class="btn_next">
 					<span class="next_wrap">
-					<strong>다음글</strong>
 						<span>다음글은 존재하지 않습니다.</span>
 					</span>
-					<i class="fa fa-angle-right"></i></a>
+					</a>
 				<%} %>
 			</div>
 		</div>
