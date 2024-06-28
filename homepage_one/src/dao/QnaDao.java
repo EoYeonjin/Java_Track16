@@ -139,7 +139,7 @@ public class QnaDao {
 			ps = con.prepareStatement(query);
 			result = ps.executeUpdate(); 
 		} catch (SQLException e) {
-			System.out.println("upadteHit() method error\n"+query);
+			System.out.println("updateHit() method error\n"+query);
 			e.printStackTrace();
 		} finally {
 			DBConnection.getConnection();
@@ -151,8 +151,8 @@ public class QnaDao {
 	//상세 목록 조회
 	public QnaDto getQnaView(String no) {
 		QnaDto dto = null;
-		String query = "select q.title, q.content, m.name as reg_name, q.anwser_content,\r\n" + 
-				"to_char(q.reg_date, 'yyyy-MM-dd'), q.hit\r\n" + 
+		String query = "select q.title, q.content, m.name as reg_name,\r\n" + 
+				"to_char(q.reg_date, 'yyyy-MM-dd') as reg_date, q.hit\r\n" + 
 				"from JSL_어연진_QNA q, JSL_어연진_MEMBER m\r\n" + 
 				"where q.reg_id = m.id\r\n" + 
 				"and q.no = '"+no+"'";
@@ -162,15 +162,14 @@ public class QnaDao {
 			ps = con.prepareStatement(query);
 			rs = ps.executeQuery();
 			
-			while(rs.next()) {
+			if(rs.next()) {
 				String title = rs.getString("title");
 				String content = rs.getString("content");
-				String answer_content = rs.getString("answer_content");
 				String reg_name = rs.getString("reg_name");
 				String reg_date = rs.getString("reg_date");
 				int hit = rs.getInt("hit");
 				
-				dto = new QnaDto(title, content, reg_name, reg_date, answer_content, hit);
+				dto = new QnaDto(no, title, content, reg_name, reg_date, hit);
 			}
 		} catch (SQLException e) {
 			System.out.println("getQnaView() method error\n"+query);
@@ -180,5 +179,180 @@ public class QnaDao {
 		}
 		
 		return dto;
+	}
+	
+	//답변조회
+	public String getAnswerContent(String no) {
+		String answer_content = "";
+		String query = "select answer_content\r\n" + 
+				"from JSL_어연진_QNA\r\n" + 
+				"where no = '"+no+"'";
+		
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement(query);
+			rs = ps.executeQuery();
+			
+			if(rs.next()) {
+				answer_content = rs.getString("answer_content");
+				
+			}
+		} catch (SQLException e) {
+			System.out.println("getAnswerContent() method error\n"+query);
+			e.printStackTrace();
+		} finally {
+			DBConnection.getConnection();
+		}
+		
+		return answer_content;
+	}
+	
+	//답변 등록
+	public int updateAnswer(QnaDto dto) {
+		int result = 0;
+		String query = "update JSL_어연진_QNA\r\n" + 
+				"set answer_content='"+dto.getAnswer_content()+"', answer_state='complet'\r\n" + 
+				"where no='"+dto.getNo()+"'";
+		
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement(query);
+			result = ps.executeUpdate(); 
+		} catch (SQLException e) {
+			System.out.println("updateAnswer() method error\n"+query);
+			e.printStackTrace();
+		} finally {
+			DBConnection.getConnection();
+		}
+		
+		return result;
+	}
+	
+	//수정
+	public int updateQna(QnaDto dto) {
+		int result = 0;
+		String query = "update JSL_어연진_QNA\r\n" + 
+				"set title='"+dto.getTitle()+"', content='"+dto.getContent()+"'\r\n" + 
+				"where no='"+dto.getNo()+"'";
+		
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement(query);
+			result = ps.executeUpdate(); 
+		} catch (SQLException e) {
+			System.out.println("updateQna() method error\n"+query);
+			e.printStackTrace();
+		} finally {
+			DBConnection.getConnection();
+		}
+		
+		return result;
+	}
+	
+	//삭제
+	public int deleteQna(String no) {
+		int result = 0;
+		String query = "delete from JSL_어연진_QNA\r\n" + 
+				"where no = '"+no+"'";
+		
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement(query);
+			result = ps.executeUpdate(); 
+		} catch (SQLException e) {
+			System.out.println("deleteQna() method error\n"+query);
+			e.printStackTrace();
+		} finally {
+			DBConnection.getConnection();
+		}
+		
+		return result;
+	}
+	
+	//이전글
+	public QnaDto getPreQna(String no) {
+		QnaDto dto = null;
+		String query = "select a.no, q.title, q.answer_state\r\n" + 
+				"from\r\n" + 
+				"    (select max(to_number(no)) as no\r\n" + 
+				"    from jsl_어연진_qna\r\n" + 
+				"    where no < "+no+") a, jsl_어연진_qna q\r\n" + 
+				"where a.no = q.no";
+		
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement(query);
+			rs = ps.executeQuery();
+			
+			if(rs.next()) {
+				no = rs.getString("no");
+				String title = rs.getString("title");	
+				String answer_state = rs.getString("answer_state");
+				String content = "";
+				
+				dto = new QnaDto(no, title, content, answer_state);
+			}
+		} catch (SQLException e) {
+			System.out.println("getPreQna() method error\n"+query);
+			e.printStackTrace();
+		} finally {
+			DBConnection.getConnection();
+		}
+		
+		return dto;
+	}
+	
+	//다음글
+	public QnaDto getNextQna(String no) {
+		QnaDto dto = null;
+		String query = "select a.no, q.title, q.answer_state\r\n" + 
+				"from\r\n" + 
+				"    (select min(to_number(no)) as no\r\n" + 
+				"    from jsl_어연진_qna\r\n" + 
+				"    where no > "+no+") a, jsl_어연진_qna q\r\n" + 
+				"where a.no = q.no";
+		
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement(query);
+			rs = ps.executeQuery();
+			
+			if(rs.next()) {
+				no = rs.getString("no");
+				String title = rs.getString("title");
+				String answer_state = rs.getString("answer_state");
+				String content = "";
+				
+				dto = new QnaDto(no, title, content, answer_state);
+			}
+		} catch (SQLException e) {
+			System.out.println("getPreQna() method error\n"+query);
+			e.printStackTrace();
+		} finally {
+			DBConnection.getConnection();
+		}
+		
+		return dto;
+	}
+	
+	//답변 삭제
+	public int deleteAnswer(String no) {
+		int result = 0;
+		String query = "update JSL_어연진_QNA\r\n" + 
+				"set answer_content = null, answer_state = 'waiting'\r\n" + 
+				"where no = '"+no+"'";
+		
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement(query);
+			result = ps.executeUpdate(); 
+		} catch (SQLException e) {
+			System.out.println("updateAnswer() method error\n"+query);
+			e.printStackTrace();
+		} finally {
+			DBConnection.getConnection();
+		}
+		
+		return result;
 	}
 }

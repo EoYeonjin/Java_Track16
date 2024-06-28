@@ -4,6 +4,22 @@ public class QnaDto {
 	private String no, title, content, reg_id, reg_name, reg_date, answer_state, answer_content, answer_msg;
 	private int hit;
 	
+	//답변등록
+	public QnaDto(String no, String answer_content) {
+		super();
+		this.no = no;
+		this.answer_content = answer_content;
+	}
+	
+	//수정, 이전글, 다음글
+	public QnaDto(String no, String title, String content, String answer_state) {
+		super();
+		this.no = no;
+		this.title = title;
+		this.content = content;
+		this.answer_state = answer_state;
+	}
+
 	//조회
 	public QnaDto(String no, String title, String reg_name, String reg_date, String answer_state, String answer_msg, int hit) {
 		super();
@@ -28,15 +44,13 @@ public class QnaDto {
 	}
 	
 	//상세조회
-	public QnaDto(String title, String content, String reg_name, String reg_date, String answer_content,
-			int hit) {
+	public QnaDto(String no, String title, String content, String reg_name, String reg_date ,int hit) {
 		super();
+		this.no = no;
 		this.title = title;
 		this.content = content;
 		this.reg_name = reg_name;
 		this.reg_date = reg_date;
-		this.answer_content = answer_content;
-		this.answer_msg = answer_msg;
 		this.hit = hit;
 	}
 
