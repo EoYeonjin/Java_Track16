@@ -4,14 +4,88 @@
 <%
 	QnaDao dao = new QnaDao();
 	String no = request.getParameter("t_no");
-	int result = dao.updateHit(no);
-	if(result != 1) System.out.print("질문답변 조회수 증가 오류");
+	String answer_state = request.getParameter("t_answer_state");
+	
+	int hitCount = dao.updateHit(no);
+	if(hitCount != 1) System.out.print("질문답변 조회수 증가 오류");
+	String answer_content = "";
+	String answer_msg = "Answer Save";
 	
 	QnaDto dto = dao.getQnaView(no);
-	String answer_content = dto.getAnswer_content();
-	if(answer_content == null) answer_content = "";
+	if(answer_state.equals("complet")){
+		answer_content = dao.getAnswerContent(no);
+		answer_msg = "Answer Modify";
+	}
+	
+	QnaDto preDto = dao.getPreQna(no);
+	QnaDto nextDto = dao.getNextQna(no);
 %>    
 <%@ include file="../common_header.jsp" %>	
+<script type="text/javascript">
+	function goUpdateForm(no){
+		<%if(sessionName.equals(dto.getReg_name())){  %>
+			<%if(answer_state.equals("waiting")){ %>
+				qna.t_no.value = no;
+				
+				qna.method="post";
+				qna.action="qna_update.jsp";
+				qna.submit();
+			<%}else { %>
+				alert("답변이 작성되어 있어 수정이 불가합니다");
+			<%} %>
+		<%}else { %>
+			alert("작성한 본인만 수정 가능합니다");
+		<%} %>
+	}
+	
+	function goDelete(no){
+		if(confirm("삭제하시겠습니까?")){
+			<%if(sessionName.equals(dto.getReg_name()) || sessionLevel.equals("top")){  %>
+				<%if(answer_state.equals("waiting") || sessionLevel.equals("top")){ %>
+					qna.t_no.value = no;
+					
+					qna.method="post";
+					qna.action="db_qna_delete.jsp";
+					qna.submit();
+				<%}else { %>
+					alert("답변이 작성되어 있어 수정이 불가합니다");
+				<%} %>	
+			<%}else { %>
+				alert("작성한 본인만 삭제 가능합니다");
+			<%} %>
+		}
+	}
+	
+	function goAnswerSave(){
+		if(checkValueLength(answerForm.t_answer_content, 1, 800, "내용을 입력해주세요", '내용은 1자 이상 800자 이내로 입력해주세요\n현재자릿수: ')) return;
+		
+		answerForm.method="post";
+		answerForm.action="db_answer_save.jsp";
+		answerForm.submit();
+	}
+	
+	function goView(no, answer_state){
+		viewForm.t_no.value = no;
+		viewForm.t_answer_state.value = answer_state;
+		
+		viewForm.method="post";
+		viewForm.action="qna_view.jsp";
+		viewForm.submit();
+	}
+	
+	function goAnswerDelete(){
+		answerForm.method="post";
+		answerForm.action="db_answer_delete.jsp";
+		answerForm.submit();
+	}
+</script>
+<form name="qna">
+	<input type="hidden" name="t_no">
+</form>
+<form name="viewForm">
+	<input type="hidden" name="t_no">
+	<input type="hidden" name="t_answer_state">
+</form>
 	<!-- sub contents -->
 	<div class="sub_title">
 		<h2>질문답변</h2>
@@ -50,9 +124,13 @@
 			<h2><%=dto.getTitle() %></h2>
 			<p class="info"><span class="user"><%=dto.getReg_name() %></span> | <%=dto.getReg_date() %> | <i class="fa fa-eye"></i> <%=dto.getHit() %></p>
 			<div class="board_body">
-				<textarea><%=dto.getContent() %></textarea>
-				<p style="font-weight:bold">답변</p>
-				<textarea><%=answer_content %></textarea>
+				<textarea readonly><%=dto.getContent() %></textarea>
+				<%if(!answer_content.equals("")){ %>
+					<p style="font-weight:bold">답변</p>
+					<textarea readonly><%=answer_content %></textarea>
+				<%} else if(answer_content.equals("") && sessionLevel.equals("top")) {%>
+					<p style="font-weight:bold">답변</p>
+				<%} %>
 
 <script type="text/javascript">
 //<![CDATA[
@@ -86,36 +164,74 @@ $(document).ready(function(){
 </style>
 				
 			<!-- 답변 -->
-			<form name="answer">
+			<form name="answerForm">
 				<div class="answerArea">
-					<input type="hidden" name="t_no" value="">
-					<textarea name="t_answer" class="textArea_H120"></textarea>
-					<a href="javascript:goAnswerSave()" class="saveButt">Answer Save</a>
+					<input type="hidden" name="t_no" value="<%=no %>">
+					<input type="hidden" name="t_answer_state" value="<%=answer_state %>">
+					<textarea name="t_answer_content" class="textArea_H120"><%=answer_content %></textarea>
+					<a href="javascript:goAnswerSave()" class="saveButt"><%=answer_msg %></a>
 				</div>
 			</form>					
 			</div>
 			
 			<div class="prev_next">
-				<a href="" class="btn_prev"><i class="fa fa-angle-left"></i>
+			<%if(preDto == null){ %>
+				<a class="btn_prev">
 				<span class="prev_wrap">
-					<strong>이전글</strong><span>이전글제목표시</span>
+					<span>이전글은 없습니다</span>
 				</span>
 				</a>
-				<div class="btn_3wrap">
-					<a href="qa.html">목록</a> 
-					<a href="qa_modify.html">수정</a> 
-					<a href="qa_delete.html" onClick="return confirm('삭제하시겠어요?')">삭제</a>
-					<%if(sessionLevel.equals("top")){ %> 
-					<a href="qa_reply.html">답변</a>
-					<span class="answerButt" style="cursor:pointer">Answer</span>
-					<%} %>
-					
-				</div>
-				<a href="" class="btn_next">
-				<span class="next_wrap">
-					<strong>다음글</strong><span>다음글제목표시</span>
+			<%}else { %>
+				<a href="javascript:goView('<%=preDto.getNo() %>', '<%=preDto.getAnswer_state() %>')" class="btn_prev"><i class="fa fa-angle-left"></i>
+				<span class="prev_wrap">
+					<strong>이전글</strong>
+					<span>
+						<%
+							String preTitle = preDto.getTitle();
+							if(preTitle.length() > 15) preTitle = preTitle.substring(0, 15) + "...";
+							out.print(preTitle);
+						%>
+					</span>
 				</span>
-				<i class="fa fa-angle-right"></i></a>
+				</a>
+			<%} %>
+				<div class="btn_3wrap">
+				
+					<a href="qna_list.jsp">목록</a> 
+					<%if(!sessionLevel.equals("top") && !sessionName.equals("")){ %>
+						<a href="javascript:goUpdateForm('<%=no %>')">수정</a> 
+					<%} %>
+					<%if(!sessionName.equals("")){ %>
+						<a href="javascript:goDelete('<%=no %>')">삭제</a>
+					<%} %>
+					<%if(sessionLevel.equals("top")){ %> 
+						<span class="answerButt" style="cursor:pointer">Answer</span>
+						<%if(answer_state.equals("complet")){ %>
+							<a href="javascript:goAnswerDelete()">Answer Delete</a>
+						<%} %>
+					<%} %>
+				</div>
+				
+				<%if(nextDto == null){ %>				
+					<a href="" class="btn_next">
+					<span class="next_wrap">
+						<span>다음글은 없습니다</span>
+					</span>
+					</a>
+				<%}else { %>
+					<a href="javascript:goView('<%=nextDto.getNo() %>', '<%=nextDto.getAnswer_state() %>')" class="btn_next">
+					<span class="next_wrap">
+						<strong>다음글</strong>
+						<span>
+							<%
+								String nextTitle = nextDto.getTitle();
+								if(nextTitle.length() > 15) nextTitle = nextTitle.substring(0, 15) + "...";
+								out.print(nextTitle);
+							%>
+						</span>
+					</span>
+					<i class="fa fa-angle-right"></i></a>
+				<%} %>
 			</div>
 		</div>
 	</div>

@@ -39,8 +39,9 @@
 %>    
 <%@ include file="../common_header.jsp" %>
 <script type="text/javascript">
-	function goView(no){
+	function goView(no, answer_state){
 		viewForm.t_no.value = no;
+		viewForm.t_answer_state.value = answer_state;
 		
 		viewForm.method="post";
 		viewForm.action="qna_view.jsp";
@@ -58,6 +59,7 @@
 	<!-- sub contents -->
 	<form name="viewForm">
 		<input type="hidden" name="t_no">
+		<input type="hidden" name="t_answer_state">
 	</form>
 	<form name="pageForm">
 		<input type="hidden" name="t_nowPage">
@@ -140,7 +142,7 @@
 			<%for(QnaDto dto: dtos){ %>
 				<tr>
 					<td><%=dto.getNo() %></td>
-					<td class="title"><a href="javascript:goView('<%=dto.getNo() %>')"><%=dto.getTitle() %></a></td>
+					<td class="title"><a href="javascript:goView('<%=dto.getNo() %>', '<%=dto.getAnswer_state() %>')"><%=dto.getTitle() %></a></td>
 					<td><span class="<%=dto.getAnswer_state() %>"><%=dto.getAnswer_msg() %></span></td>
 					<td><%=dto.getReg_name() %></td>
 					<td><%=dto.getReg_date() %></td>
