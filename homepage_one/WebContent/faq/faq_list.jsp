@@ -1,5 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="dao.*, dto.*, java.util.*" %>
+<%
+	FaqDao dao = new FaqDao();
+
+	ArrayList<FaqDto> dtos = dao.getFaqList();
+%>    
 <%@ include file="../common_header.jsp" %>
 	<!-- sub contents -->
 	<div class="sub_title">
@@ -8,7 +14,7 @@
 		  <div class="location">
 			<ul>
 				<li class="btn_home">
-					<a href="index.html"><i class="fa fa-home btn_plus"></i></a>
+					<a href="../index.jsp"><i class="fa fa-home btn_plus"></i></a>
 				</li>
 				<li class="dropdown">
 					<a href="">커뮤니티<i class="fa fa-plus btn_plus"></i></a>
@@ -23,9 +29,10 @@
 				<li class="dropdown">
 					<a href="">자주하는질문<i class="fa fa-plus btn_plus"></i></a>
 					<div class="dropdown_menu">
-						<a href="notice.html">공지사항</a>
-						<a href="qa.html">질문과답변</a>
-						<a href="faq.html">FAQ</a>
+						<a href="../notice/notice_list.jsp">공지사항</a>
+						<a href="../news/news_list.jsp">NEWS</a>
+						<a href="../qna/qna_list.jsp">질문과답변</a>
+						<a href="faq_list.jsp">FAQ</a>
 					</div>
 				</li>
 			</ul>
@@ -36,7 +43,7 @@
 	<div class="container">
 	  <div class="search_wrap">
 		<div class="record_group">
-			<p>총게시글<span>120</span>건</p>
+			<p>총게시글<span><%=dtos.size() %></span>건</p>
 		</div>
 		<div class="search_group">
 			<form name="myform" action="">
@@ -52,7 +59,7 @@
 	  <div class="bord_list">
 		
 		<div class="faq-group">
-
+			<%for(FaqDto dto: dtos){ %>
 				<div class="accordion">
 					<table class="table">
 						<colgroup>
@@ -63,40 +70,27 @@
 							<col width="10%">
 						</colgroup>
 						<tr>
-							<td>F001</td>
-							<td>질문을 할때에는 이헐게~~</td>
-							<td>관리자</td>
-							<td>2020-09-01</td>
-							<td>35</td>
+							<td>
+								<%
+									if(dto.getIpt().equals("n")) out.print(dto.getNo());
+									else out.print("[중요]");
+								%>
+							</td>
+							<td><%=dto.getTitle() %></td>
+							<td><%=dto.getReg_name() %></td>
+							<td><%=dto.getReg_date() %></td>
+							<td><%=dto.getHit() %></td>
 						</tr>	
 					</table>
 				</div>
 				<div class="panel">
-					<textarea>asdfasdfasd asdfasdf asd</textarea>
+					<textarea readonly><%=dto.getAnswer_content() %></textarea>
+					<div class="btn_3wrap">
+					<a href="javascript:goUpdateForm('<%=dto.getNo()%>')">수정</a>
+					<a href="javascript:goDelete('<%=dto.getNo()%>')">삭제</a> 
+					</div>
 				</div>
-
-				<div class="accordion">
-					<table class="table">
-						<colgroup>
-							<col width="5%">
-							<col width="*">
-							<col width="15%">
-							<col width="10%">
-							<col width="10%">
-						</colgroup>
-						<tr>
-							<td>F222</td>
-							<td>222222~</td>
-							<td>관리자</td>
-							<td>2020-09-01</td>
-							<td>35</td>
-						</tr>	
-					</table>
-				</div>
-				<div class="panel">
-					<textarea>asdfasdfasd asdfasdf asd</textarea>
-				</div>
-				
+				<%} %>
 		</div>
 
 		<script>
@@ -133,7 +127,9 @@
 			<a href="">5</a>
 			<a href=""><i class="fa fa-angle-right"></i></a>
 			<a href=""><i class="fa  fa-angle-double-right"></i></a>
-			<a href="faq_write.html" class="btn_write">글쓰기</a>
+			<%if(sessionLevel.equals("top")){ %>
+				<a href="faq_write.jsp" class="btn_write">글쓰기</a>
+			<%} %>
 		</div>
 	  </div>
 	</div>
