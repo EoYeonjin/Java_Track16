@@ -4,6 +4,25 @@ public class FaqDto {
 	private String no, title, answer_content, reg_id, reg_name, reg_date, ipt;
 	private int hit;
 	
+	//수정
+	public FaqDto(String no, String title, String answer_content, String ipt) {
+		super();
+		this.no = no;
+		this.title = title;
+		this.answer_content = answer_content;
+		this.ipt = ipt;
+	}
+
+	//상세조회
+	public FaqDto(String title, String answer_content, String reg_name, String reg_date, String ipt) {
+		super();
+		this.title = title;
+		this.answer_content = answer_content;
+		this.reg_name = reg_name;
+		this.reg_date = reg_date;
+		this.ipt = ipt;
+	}
+
 	//조회
 	public FaqDto(String no, String title, String answer_content, String reg_name, String reg_date, int hit, String ipt) {
 		super();
