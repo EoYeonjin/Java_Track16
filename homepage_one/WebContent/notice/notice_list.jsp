@@ -59,6 +59,9 @@
 </form>
 <form name="pageForm">
 	<input type="hidden" name="t_nowPage">
+	<%
+		search = search.replace("\"", "&quot;");
+	%>
 	<input type="hidden" name="t_select" value="<%=select %>">
 	<input type="hidden" name="t_search" value="<%=search %>">
 </form>
@@ -84,9 +87,11 @@
 				<li class="dropdown">
 					<a href="">공지사항<i class="fa fa-plus btn_plus"></i></a>
 					<div class="dropdown_menu">
-						<a href="notice.html">공지사항</a>
-						<a href="qa.html">질문과답변</a>
-						<a href="faq.html">FAQ</a>
+						<a href="notice_list.jsp">공지사항</a>
+						<a href="../news/news_list.jsp">NEWS</a>
+						<a href="../qna/qna_list.jsp">질문과답변</a>
+						<a href="../faq/faq_list.jsp">FAQ</a>
+						<a href="../pds/pds_list.jsp">자료실</a>
 					</div>
 				</li>
 			</ul>

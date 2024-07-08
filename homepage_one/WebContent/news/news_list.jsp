@@ -91,8 +91,9 @@
 					<div class="dropdown_menu">
 						<a href="../notice/notice_list.jsp">공지사항</a>
 						<a href="news_list.jsp">NEWS</a>
-						<a href="qa.html">질문과답변</a>
-						<a href="faq.html">FAQ</a>
+						<a href="../qna/qna_list.jsp">질문과답변</a>
+						<a href="../faq/faq_list.jsp">FAQ</a>
+						<a href="../pds/pds_list.jsp">자료실</a>
 					</div>
 				</li>
 			</ul>

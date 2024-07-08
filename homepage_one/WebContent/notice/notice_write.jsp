@@ -40,7 +40,11 @@
 				<li class="dropdown">
 					<a href="">공지사항<i class="fa fa-plus btn_plus"></i></a>
 					<div class="dropdown_menu">
-						<a href="gratings.html">공지사항</a>
+						<a href="notice_list.jsp">공지사항</a>
+						<a href="../news/news_list.jsp">NEWS</a>
+						<a href="../qna/qna_list.jsp">질문과답변</a>
+						<a href="../faq/faq_list.jsp">FAQ</a>
+						<a href="../pds/pds_list.jsp">자료실</a>
 						<a href="gratings.html">DW인터뷰</a>
 						<a href="gratings.html">취업실적</a>
 					</div>

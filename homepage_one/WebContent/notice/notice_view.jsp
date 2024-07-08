@@ -28,6 +28,14 @@
 		noti.action="notice_update.jsp";
 		noti.submit();
 	}
+	
+	function goDelete(){
+		if(confirm("삭제하시겠습니까?")){
+			noti.method="post";
+			noti.action="db_notice_delete.jsp"
+			noti.submit();
+		}
+	}
 </script>
 <form name="noti">
 	<input type="hidden" name="t_no" value="<%=no %>">
@@ -52,10 +60,13 @@
 					</div>
 				</li>
 				<li class="dropdown">
-					<a href="">질문답변<i class="fa fa-plus btn_plus"></i></a>
+					<a href="">공지사항<i class="fa fa-plus btn_plus"></i></a>
 					<div class="dropdown_menu">
-						<a href="gratings.html">공지사항</a>
-						<a href="gratings.html">질문답변</a>
+						<a href="notice_list.jsp">공지사항</a>
+						<a href="../news/news_list.jsp">NEWS</a>
+						<a href="../qna/qna_list.jsp">질문과답변</a>
+						<a href="../faq/faq_list.jsp">FAQ</a>
+						<a href="../pds/pds_list.jsp">자료실</a>
 						<a href="gratings.html">취업실적</a>
 					</div>
 				</li>
@@ -115,7 +126,6 @@
 			<%} else{%>
 				<a class="btn_next">
 				<span class="next_wrap">
-					<strong>다음글</strong>
 					<span>다음글이 존재하지 않습니다</span>
 				</span>
 				<i class="fa fa-angle-right"></i></a>
