@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import common.DBConnection;
 import dto.PdsDto;
@@ -57,5 +58,70 @@ public class PdsDao {
 		}
 		
 		return result;
+	}
+	
+	//조회
+	public ArrayList<PdsDto> getPdsList(String select, String search, int start, int end){
+		ArrayList<PdsDto> dtos = new ArrayList<PdsDto>();
+		String query = "select * from(\r\n" + 
+				"    select rownum as rnum, tbl.*\r\n" + 
+				"    from(\r\n" + 
+				"        select p.no, p.title, m.name as reg_name, p.attach,\r\n" + 
+				"        to_char(p.reg_date, 'yyyy-MM-dd') as reg_date, p.hit\r\n" + 
+				"        from JSL_어연진_pds p, JSL_어연진_MEMBER m \r\n" + 
+				"        where p.reg_id = m.id\r\n" + 
+				"        and p."+select+" like '%"+search+"%'\r\n" + 
+				"        order by to_number(no) desc\r\n" + 
+				") tbl)\r\n" + 
+				"where rnum>= "+start+" and rnum<="+end;
+		
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement(query);
+			rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				String no = rs.getString("no");
+				String title = rs.getString("title");
+				String reg_name = rs.getString("reg_name");
+				String attach = rs.getString("attach");
+				String reg_date = rs.getString("reg_date");
+				int hit = rs.getInt("hit");
+				
+				dtos.add(new PdsDto(no, title, attach, reg_name, reg_date, hit));
+			}
+		} catch (SQLException e) {
+			System.out.println("getPdsList() method error\n"+query);
+			e.printStackTrace();
+		} finally {
+			DBConnection.closeDB(con, ps, rs);
+		}
+		
+		return dtos;
+	}
+	
+	//페이지 조회
+	public int getTotalCount(String select, String search) {
+		int totalCount = 0;
+		String query = "select count(*) as totalCount\r\n" + 
+				"from JSL_어연진_PDS\r\n" + 
+				"where "+select+" like '%"+search+"%'";
+		
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement(query);
+			rs = ps.executeQuery();
+			
+			if(rs.next()) {
+				totalCount = rs.getInt("totalCount");
+			}
+		} catch (SQLException e) {
+			System.out.println("getPdsList() method error\n"+query);
+			e.printStackTrace();
+		} finally {
+			DBConnection.closeDB(con, ps, rs);
+		}
+		
+		return totalCount;
 	}
 }

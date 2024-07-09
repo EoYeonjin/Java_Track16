@@ -4,6 +4,17 @@ public class PdsDto {
 	private String no, title, content, attach, reg_id, reg_name, reg_date, update_id, update_name, update_date;
 	private int hit;
 	
+	//조회
+	public PdsDto(String no, String title, String attach, String reg_name, String reg_date, int hit) {
+		super();
+		this.no = no;
+		this.title = title;
+		this.attach = attach;
+		this.reg_name = reg_name;
+		this.reg_date = reg_date;
+		this.hit = hit;
+	}
+
 	//insert
 	public PdsDto(String no, String title, String content, String attach, String reg_id, String reg_date) {
 		super();
