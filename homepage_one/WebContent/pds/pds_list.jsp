@@ -1,8 +1,74 @@
+<%@page import="common.CommonUtil"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="dao.*, dto.*, java.util.*" %>
+<%
+	request.setCharacterEncoding("utf-8");
+	PdsDao dao = new PdsDao();
+	
+	String select = request.getParameter("t_select");
+	String search = request.getParameter("t_search");
+	
+	if(select == null){
+		select = "title";
+		search = "";
+	}
+	
+	search = search.replace("'", "&#39;");
+	
+	/* paging 설정 start*/
+	int totalCount = dao.getTotalCount(select,search);
+	int list_setup_count = 4;  //한페이지당 출력 행수 
+	int pageNumber_count = 3;  //한페이지당 출력 페이지 갯수
+	
+	String nowPage = request.getParameter("t_nowPage");
+	int current_page = 0; // 현재페이지 번호
+	int total_page = 0;    // 전체 페이지 수
+	
+	if(nowPage == null || nowPage.equals("")) current_page = 1; 
+	else current_page = Integer.parseInt(nowPage);
+	
+	total_page = totalCount / list_setup_count;  // 몫 : 2
+	int rest = 	totalCount % list_setup_count;   // 나머지:1
+	if(rest !=0) total_page = total_page + 1;     // 3
+	
+	int start = (current_page -1) * list_setup_count + 1;
+	int end   = current_page * list_setup_count;
+	/* paging 설정 end*/
+	
+	ArrayList<PdsDto> dtos = dao.getPdsList(select, search, start, end);
+%>    
 <%@ include file="../common_header.jsp" %>
+<script type="text/javascript">
+	function goView(no){
+		viewForm.t_no.value = no;
+		
+		viewForm.method="post";
+		viewForm.action="pds_view.jsp";
+		viewForm.submit();
+	}
+	
+	function goPage(pageNumber){
+		pageForm.t_nowPage.value = pageNumber;
+		
+		pageForm.method="post";
+		pageForm.action="pds_list.jsp";
+		pageForm.submit();
+	}
+</script>
+<form name="viewForm">
+	<input type="hidden" name="t_no">
+</form>	
+<form name="pageForm">
+	<input type="hidden" name="t_nowPage">
+	<%
+		search = search.replace("\"", "&quot;");
+	%>
+	<input type="hidden" name="t_select" value="<%=select %>">
+	<input type="hidden" name="t_search" value="<%=search %>">
+</form>
 
-	<!-- sub contents -->
+<!-- sub contents -->
 	<div class="sub_title">
 		<h2>자료실</h2>
 		<div class="container">
@@ -39,15 +105,15 @@
 	<div class="container">
 	  <div class="search_wrap">
 		<div class="record_group">
-			<p>총게시글<span><?=$count?></span>건</p>
+			<p>총게시글<span><%=totalCount %></span>건</p>
 		</div>
 		<div class="search_group">
-			<form name="myform" method="get" action="notice.html">
-				<select name="sel" class="select">
-					<option value="1">제목</option>
-					<option value="2">내용</option>
+			<form name="pds" method="post" action="pds_list.jsp">
+				<select name="t_select" class="select">
+					<option value="title" <%if(select.equals("title")) out.print("selected"); %>>제목</option>
+					<option value="content" <%if(select.equals("content")) out.print("selected"); %>>내용</option>
 				</select>
-				<input type="text" name="search" class="search_word">
+				<input type="text" name="t_search" class="search_word" value="<%=search %>">
 				<button class="btn_search" type="submit"><i class="fa fa-search"></i><span class="sr-only">검색버튼</span></button>
 			</form>
 		</div>
@@ -73,34 +139,28 @@
 				</tr>
 			</thead>
 			<tbody>
+			<%for(PdsDto dto: dtos){ %>
 				<tr>
-					<td>8</td>
-					<td class="title"><a href="pds_view.html">JAVA API문서</a></td>
-					<td><img src="../images/file.png"></td>
-					<td>관리자</td>
-					<td>18-10-16</td>
-					<td>187</td>
+					<td><%=dto.getNo() %></td>
+					<td class="title"><a href="javascript:goView('<%=dto.getNo() %>')"><%=dto.getTitle() %></a></td>
+					<%if(dto.getAttach() != null){ %>
+						<td><img src="../images/file.png"></td>
+					<%}else{ %>
+						<td></td>
+					<%} %>
+					<td><%=dto.getReg_date() %></td>
+					<td><%=dto.getReg_name() %></td>
+					<td><%=dto.getHit() %></td>
 				</tr>
-				<tr>
-					<td>7</td>
-					<td class="title"><a href="pds_view.html">이클립스 엔터프라이즈 버젼</a></td>
-					<td><img src="../images/file.png"></td>
-					<td>관리자</td>
-					<td>18-10-16</td>
-					<td>187</td>
-				</tr>
-				<tr>
-					<td>6</td>
-					<td class="title"><a href="pds_view.html">정보처리 필기 과년도 기출문제</a></td>
-					<td><img src="../images/file.png"></td>
-					<td>관리자</td>
-					<td>18-10-16</td>
-					<td>187</td>
-				</tr>
+			<%} %>	
 			</tbody>
 		</table>
 		<div class="paging">
-			<a href=""><i class="fa  fa-angle-double-left"></i></a>
+		<%
+			String pageDis = CommonUtil.pageListPost(current_page, total_page, pageNumber_count);
+			out.print(pageDis);
+		%>
+		<!--<a href=""><i class="fa  fa-angle-double-left"></i></a>
 			<a href=""><i class="fa fa-angle-left"></i></a>
 			<a href="" class="active">1</a>
 			<a href="">2</a>
@@ -108,7 +168,7 @@
 			<a href="">4</a>
 			<a href="">5</a>
 			<a href=""><i class="fa fa-angle-right"></i></a>
-			<a href=""><i class="fa  fa-angle-double-right"></i></a>
+			<a href=""><i class="fa  fa-angle-double-right"></i></a>	-->
 			<%if(sessionLevel.equals("top")){ %>
 				<a href="pds_write.jsp" class="btn_write">글쓰기</a>
 			<%} %>
