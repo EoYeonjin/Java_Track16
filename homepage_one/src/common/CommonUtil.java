@@ -4,6 +4,19 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class CommonUtil {
+	//공시사항 폴더 경로
+	public static String getNoticeDir() {
+		String dir = "C:/Users/admin/Desktop/java_eyj/homepage_one/WebContent/attach/notice/";
+		return dir;
+	}
+	
+	//자료실 폴더 경로
+	public static String getPdsDir() {
+		String dir = "C:/Users/admin/Desktop/java_eyj/homepage_one/WebContent/attach/pds/";
+		
+		return dir;
+	}
+	
 	//Today's date
 	public static String getToday() {
 		Date time = new Date();
@@ -20,12 +33,6 @@ public class CommonUtil {
 		
 		String today = sdf.format(time);
 		return today;
-	}
-	
-	//연습
-	public static String page() {
-		String result = "<a href=\"\" class='active'>1</a>";
-		return result;
 	}
 	
 	// 페이지 설정

@@ -126,8 +126,7 @@ public class PdsDao {
 	}
 	
 	//조회수 증가
-	public int updateHit(String no) {
-		int result = 0;
+	public void updateHit(String no) {
 		String query = "update JSL_어연진_PDS\r\n" + 
 				"set hit = hit + 1\r\n" + 
 				"where no = '"+no+"'";
@@ -135,7 +134,8 @@ public class PdsDao {
 		try {
 			con = DBConnection.getConnection();
 			ps = con.prepareStatement(query);
-			result = ps.executeUpdate();
+			int result = ps.executeUpdate();
+			if(result != 1) System.out.print("조회수 증가 오류 pds_view.jsp");
 		} catch (SQLException e) {
 			System.out.println("updateHit() method error\n"+query);
 			e.printStackTrace();
@@ -143,7 +143,6 @@ public class PdsDao {
 			DBConnection.closeDB(con, ps, rs);
 		}
 		
-		return result;
 	}
 	
 	//상세조회

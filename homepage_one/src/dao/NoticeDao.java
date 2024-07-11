@@ -42,9 +42,9 @@ public class NoticeDao {
 	public int noticeSave(NoticeDto dto) {
 		int result = 0;
 		String query= "insert into jsl_어연진_notice\r\n" + 
-				"(no, title, content, reg_id, reg_date)\r\n" + 
+				"(no, title, content, attach, reg_id, reg_date)\r\n" + 
 				"values\r\n" + 
-				"('"+dto.getNo()+"','"+dto.getTitle()+"', '"+dto.getContent()+"', '"+dto.getReg_id()+"',\r\n" + 
+				"('"+dto.getNo()+"','"+dto.getTitle()+"', '"+dto.getContent()+"', '"+dto.getAttach()+"', '"+dto.getReg_id()+"',\r\n" + 
 				"to_date('"+dto.getReg_date()+"','yyyy-MM-dd hh24:mi:ss')\r\n" + 
 				")";
 		
@@ -68,7 +68,7 @@ public class NoticeDao {
 		String query = "select * from(\r\n" + 
 				"    select rownum as rnum, tbl.*\r\n" + 
 				"    from(\r\n" + 
-				"        select n.no, n.title, m.name as reg_name, \r\n" + 
+				"        select n.no, n.title, m.name as reg_name, n.attach, \r\n" + 
 				"        to_char(n.reg_date, 'yyyy-MM-dd') as reg_date, n.hit\r\n" + 
 				"        from jsl_어연진_member m, jsl_어연진_notice n\r\n" + 
 				"        where m.id = n.reg_id\r\n" + 
@@ -85,11 +85,12 @@ public class NoticeDao {
 			while(rs.next()) {
 				String no = rs.getString("no");
 				String title = rs.getString("title");
+				String attach = rs.getString("attach");
 				String reg_name = rs.getString("reg_name");
 				String reg_date = rs.getString("reg_date");
 				int hit = rs.getInt("hit");
 				
-				dtos.add(new NoticeDto(no, title, reg_name, reg_date, hit));
+				dtos.add(new NoticeDto(no, title, attach, reg_name, reg_date, hit));
 			}
 		} catch (SQLException e) {
 			System.out.println("getNoticeList() method error\n"+query);
@@ -129,7 +130,7 @@ public class NoticeDao {
 	//상세조회
 	public NoticeDto getNoticeView(String no) {
 		NoticeDto dto = null;
-		String query = "select n.title, n.reg_id, m.name as reg_name, n.content, n.hit,\r\n" + 
+		String query = "select n.title, n.reg_id, m.name as reg_name, n.attach, n.content, n.hit,\r\n" + 
 				"to_char(n.reg_date, 'yyyy-MM-dd') as reg_date\r\n" + 
 				"from jsl_어연진_member m, jsl_어연진_notice n\r\n" + 
 				"where m.id = n.reg_id \r\n" + 
@@ -143,12 +144,14 @@ public class NoticeDao {
 			if(rs.next()) {
 				String title = rs.getString("title");
 				String content = rs.getString("content");
+				String attach = rs.getString("attach");
+				if(attach == null) attach = "첨부파일 없음";
 				String reg_id = rs.getString("reg_id");
 				String reg_name = rs.getString("reg_name");
 				String reg_date = rs.getString("reg_date");
 				int hit = rs.getInt("hit");
 				
-				dto = new NoticeDto(no, title, content, reg_id, reg_name, reg_date, hit);
+				dto = new NoticeDto(no, title, content, attach, reg_id, reg_name, reg_date, hit);
 			}
 		} catch (SQLException e) {
 			System.out.println("getNoticeView() method error\n"+query);
