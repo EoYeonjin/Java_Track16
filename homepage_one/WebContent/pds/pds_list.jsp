@@ -127,6 +127,7 @@
 				<col width="10%">
 				<col width="10%">
 				<col width="10%">
+				<col width="10%">
 			</colgroup>
 			<thead>
 				<tr>

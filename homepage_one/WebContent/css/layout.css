@@ -258,7 +258,8 @@ text-shadow:1px 1px 2px rgba(0,0,0,0.3);}
 .board_view .info {font-size:18px; text-align:center;}
 .board_view .info .user {color:#007dc6;}
 .board_body {padding:70px 120px; border-top:1px solid #ddd; border-bottom:1px solid #ddd;}
-.board_pds {padding:20px 120px; border-top:1px solid #ddd;  margin-top:35px; }
+.board_pds {padding:20px 120px; border-top:1px solid #ddd;  margin-top:35px;}
+.board_img {padding-right:10px; vertical-align:middle;}
 .board_body p {margin-bottom:20px;}
 .board_info {padding:7px 120px; border-bottom:1px solid #ddd;}
 .prev_next {margin-top:50px; height:67px; position:relative;}

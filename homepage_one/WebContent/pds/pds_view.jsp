@@ -6,8 +6,7 @@
 	
 	String no = request.getParameter("t_no");
 
-	int hitCount = dao.updateHit(no);
-	if(hitCount != 1) System.out.print("조회수 증가 오류 pds_view.jsp");
+	dao.updateHit(no);
 	
 	PdsDto dto = dao.getPdsView(no);
 	
@@ -76,9 +75,16 @@
 		<div class="board_view">
 			<h2><%=dto.getTitle() %></h2>
 			<p class="info"><span class="user"><%=dto.getReg_name() %></span> | <%=dto.getReg_date() %> | <i class="fa fa-eye"></i> <%=dto.getHit() %></p>
-			<div class="board_pds">
-			첨부파일 : <a href=""><%=dto.getAttach() %></a>
-			</div>
+			<%if(!dto.getAttach().equals("첨부파일 없음")){ %>	
+				<div class="board_pds">
+					<img src="../images/file.png" class="board_img">첨부파일 : 
+					<a href="../common/filedown.jsp?t_fileDir=pds&t_fileName=<%=dto.getAttach() %>"><%=dto.getAttach() %></a>
+				</div>
+			<%} else { %>	
+				<div class="board_pds">
+					<img src="../images/file.png" class="board_img">첨부파일 : <a><%=dto.getAttach() %></a>
+				</div>
+			<%} %>
 			<div class="board_body">
 				<textarea><%=dto.getContent() %></textarea>
 			</div>
@@ -110,7 +116,7 @@
 			<%} %>	
 				<div class="btn_3wrap">
 					<a href="pds_list.jsp">목록</a> 
-					<%if(!sessionLevel.equals("top")){ %>
+					<%if(sessionLevel.equals("top")){ %>
 						<a href="javascript:goUpdateForm()">수정</a> 
 						<a href="javascript:goDelete()">삭제</a>
 					<%} %>

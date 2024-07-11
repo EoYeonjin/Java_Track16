@@ -13,6 +13,42 @@
 		if(checkValueLength(noti.t_title, 5, 40, "제목을 입력해주세요", '제목은 5자 이상 40자 이내로 입력해주세요\n현재자릿수: ')) return;
 		if(checkValueLength(noti.t_content, 1, 800, "내용을 입력해주세요", '내용은 1자 이상 800자 이내로 입력해주세요\n현재자릿수: ')) return;
 		
+		// 1.확장자 검사
+		var fileName = noti.t_attach.value;
+		if(fileName != ""){ //  C:\fakepath\img_1.png
+			var pathFileName = fileName.lastIndexOf(".")+1;    //확장자 제외한 경로+파일명
+			var extension = (fileName.substr(pathFileName)).toLowerCase();	//확장자명
+			//파일명.확장자
+			if(extension != "pdf" && extension != "hwp" && extension != "png"){
+				alert(extension +" 형식 파일은 업로드 안됩니다. 한글, PDF 파일만 가능!");
+				return;
+			}		
+		}
+		
+		// 2.첨부 용량 체크	
+		var file = noti.t_attach;
+		var fileMaxSize  = 10; // 첨부 최대 용량 설정
+		if(file.value !=""){
+			// 사이즈체크
+			var maxSize  = 1024 * 1024 * fileMaxSize;
+			var fileSize = 0;
+			// 브라우저 확인
+			var browser=navigator.appName;
+			// 익스플로러일 경우
+			if (browser=="Microsoft Internet Explorer"){
+				var oas = new ActiveXObject("Scripting.FileSystemObject");
+				fileSize = oas.getFile(file.value).size;
+			}else {
+			// 익스플로러가 아닐경우
+				fileSize = file.files[0].size;
+			}
+
+			if(fileSize > maxSize){
+				alert(" 첨부파일 사이즈는 "+fileMaxSize+"MB 이내로 등록 가능합니다. ");
+				return;
+			}	
+		}	
+		
 		noti.method="post";
 		noti.action="db_notice_save.jsp";
 		noti.submit();
@@ -58,7 +94,7 @@
 	  <div class="write_wrap">
 	  <h2 class="sr-only">공지사항 글쓰기</h2>
 	  <!-- action을 처리하기전에 check()사용자 함수를 실행하고 되돌아 와라-->
-	  	<form name="noti">
+	  	<form name="noti" enctype="multipart/form-data">
 			<table class="bord_table">
 				<caption class="sr-only">공지사항 입력 표</caption>
 				<colgroup>

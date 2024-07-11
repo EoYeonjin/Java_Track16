@@ -8,7 +8,7 @@
 	
 	//attachment
 	int maxSize = 1024 * 1024 * 10;
-	String pds_dir="C:/Users/admin/Desktop/java_eyj/homepage_one/WebContent/attach/pds/";
+	String pds_dir=CommonUtil.getPdsDir();
 	
 	MultipartRequest mpr = new MultipartRequest(request, pds_dir, maxSize,"utf-8", new DefaultFileRenamePolicy());
 	

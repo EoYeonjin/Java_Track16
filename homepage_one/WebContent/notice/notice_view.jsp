@@ -6,7 +6,7 @@
 	String no = request.getParameter("t_no");
 	
 	int hitCount = dao.setHitCount(no);
-	if(hitCount != 1) System.out.print("공지사항 조회수 증가 오류");
+	if(hitCount != 1) System.out.print("공지사항 조회수 증가 오류 notice_view.jsp");
 	NoticeDto dto = dao.getNoticeView(no);
 	
 	NoticeDto preDto = dao.getPreNotice(no);
@@ -79,6 +79,16 @@
 		<div class="board_view">
 			<h2><%=dto.getTitle() %></h2>
 			<p class="info"><span class="user"><%=dto.getReg_name() %></span> | <%=dto.getReg_date() %> | <i class="fa fa-eye"></i> <%=dto.getHit() %></p>
+			<%if(!dto.getAttach().equals("첨부파일 없음")){ %>	
+				<div class="board_pds">
+					<img src="../images/file.png" class="board_img">첨부파일 : 
+					<a href="../common/filedown.jsp?t_fileDir=pds&t_fileName=<%=dto.getAttach() %>"><%=dto.getAttach() %></a>
+				</div>
+			<%} else { %>	
+				<div class="board_pds">
+					<img src="../images/file.png" class="board_img">첨부파일 : <a><%=dto.getAttach() %></a>
+				</div>
+			<%} %>
 			<div class="board_body">
 				<textarea readonly><%=dto.getContent() %></textarea>
 			</div>

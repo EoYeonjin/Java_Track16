@@ -124,11 +124,13 @@
 				<col width="10%">
 				<col width="10%">
 				<col width="10%">
+				<col width="10%">
 			</colgroup>
 			<thead>
 				<tr>
 					<th>번호</th>
 					<th>제목</th>
+					<th>첨부파일</th>
 					<th>글쓴이</th>
 					<th>작성일</th>
 					<th>조회수</th>
@@ -139,6 +141,11 @@
 				<tr>
 					<td><%=dto.getNo() %></td>
 					<td class="title"><a href="javascript:goView('<%=dto.getNo() %>')"><%=dto.getTitle() %></a></td>
+					<%if(dto.getAttach() != null){ %>
+						<td><img src="../images/file.png"></td>
+					<%}else{ %>
+						<td></td>
+					<%} %>
 					<td><%=dto.getReg_name() %></td>
 					<td><%=dto.getReg_date() %></td>
 					<td><%=dto.getHit() %></td>

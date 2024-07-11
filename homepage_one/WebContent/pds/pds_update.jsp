@@ -1,5 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="dao.*, dto.*" %>    
+<%
+	PdsDao dao = new PdsDao();
+	String no = request.getParameter("t_no");
+	
+	PdsDto dto = dao.getPdsView(no);
+%>
 <%@ include file="../common_header.jsp" %>
 
 <script type="text/javascript">
@@ -42,7 +49,7 @@
 	<div class="container">
 	  <div class="write_wrap">
 	  <h2 class="sr-only">자료실 글쓰기</h2>
-	  <form name="pds" method="post" action="pds_insert.html" onsubmit="return check()">
+	  <form name="pds">
 	  <!-- action을 처리하기전에 check()사용자 함수를 실행하고 되돌아 와라-->
 			<table class="bord_table">
 				<caption class="sr-only">자료실 입력 표</caption>
@@ -52,20 +59,22 @@
 				</colgroup>
 				<tbody>
 					<tr class="first">
-						<th>글쓴이</th>
-						<td><input type="text" name="writer"></td>
-					</tr>
-					<tr>
 						<th>제목</th>
-						<td><input type="text" name="title"></td>
+						<td colspan="3"><input type="text" name="t_title" value="<%=dto.getTitle()%>"></td>
 					</tr>
 					<tr>
 						<th>내용</th>
-						<td><textarea name="contents"></textarea></td>
+						<td colspan="3"><textarea name="t_content"><%=dto.getContent()%></textarea></td>
 					</tr>
 					<tr>
 						<th>첨부</th>
-						<td><input type="file" name="photo"></td>
+						<td colspan="3"><input type="file" name="t_attach"></td>
+					</tr>
+					<tr>
+						<th>글쓴이</th>
+						<td><%=dto.getReg_name()%></td>
+						<th>등록 일자</th>
+						<td><%=dto.getReg_date() %></td>
 					</tr>
 				</tbody>
 			</table>
@@ -78,26 +87,6 @@
 	  
 	</div>
 	<!-- end contents -->
-	<script>
-		function check() {
-			if(pds.writer.value=="") {
-				alert("글쓴이 입력");
-				pds.writer.focus();
-				return false;
-			}
-			if(pds.title.value=="") {
-				alert("제목을 입력");
-				pds.title.focus();
-				return false;
-			}
-			if(pds.contents.value=="") {
-				alert("내용을 입력");
-				pds.contents.focus();
-				return false;
-			}
-			return true;
-		}
-	</script>
 	<script>
 		$(function() {
 			$(".location  .dropdown > a").on("click",function(e) {
