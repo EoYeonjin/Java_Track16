@@ -36,8 +36,8 @@ public class PdsDto {
 		this.hit = hit;
 	}
 
-	//insert
-	public PdsDto(String no, String title, String content, String attach, String reg_id, String reg_date) {
+	//insert, update
+	public PdsDto(String no, String title, String content, String attach, String reg_id, String reg_date, String update_id, String update_date) {
 		super();
 		this.no = no;
 		this.title = title;
@@ -45,6 +45,8 @@ public class PdsDto {
 		this.attach = attach;
 		this.reg_id = reg_id;
 		this.reg_date = reg_date;
+		this.update_id = update_id;
+		this.update_date = update_date;
 	}
 
 	public String getNo() {

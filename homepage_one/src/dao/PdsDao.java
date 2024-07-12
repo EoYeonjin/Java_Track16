@@ -246,4 +246,26 @@ public class PdsDao {
 		
 		return nexDto;
 	}
+	
+	//수정
+	public int updatePds(PdsDto dto) {
+		int result = 0;
+		String query = "update JSL_어연진_PDS\r\n" + 
+				"set title='"+dto.getTitle()+"', content='"+dto.getContent()+"', \r\n" + 
+				"attach='"+dto.getAttach()+"', update_id='"+dto.getUpdate_id()+"', update_date=to_date('"+dto.getUpdate_date()+"', 'yyyy-MM-dd hh24:mi:ss')\r\n" + 
+				"where no='"+dto.getNo()+"'";
+		
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement(query);
+			result = ps.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println("updatePds() method error\n"+query);
+			e.printStackTrace();
+		} finally {
+			DBConnection.closeDB(con, ps, rs);
+		}
+		
+		return result;
+	}
 }
