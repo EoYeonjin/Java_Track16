@@ -12,6 +12,7 @@
 	
 	PdsDto preDto = dao.getPrePds(no);
 	PdsDto nexDto = dao.getNextPds(no);
+	
 %>
 <%@ include file="../common_header.jsp" %>
 <script type="text/javascript">

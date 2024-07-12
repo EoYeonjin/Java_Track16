@@ -8,7 +8,7 @@
 	
 	//attachment
 	int maxSize = 1024 * 1024 * 10;
-	String pds_dir=CommonUtil.getPdsDir();
+	String pds_dir = CommonUtil.getPdsDir();
 	
 	MultipartRequest mpr = new MultipartRequest(request, pds_dir, maxSize,"utf-8", new DefaultFileRenamePolicy());
 	
@@ -22,7 +22,7 @@
 	String reg_id = (String)session.getAttribute("sessionId");
 	String reg_date = CommonUtil.getTodayTime();
 	
-	PdsDto dto = new PdsDto(no, title, content, attach, reg_id, reg_date);
+	PdsDto dto = new PdsDto(no, title, content, attach, reg_id, reg_date, "", "");
 	
 	int result = dao.insertPds(dto); 
 	
