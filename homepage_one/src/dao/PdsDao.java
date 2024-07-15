@@ -268,4 +268,46 @@ public class PdsDao {
 		
 		return result;
 	}
+	
+	//삭제
+	public int deletePds(String no) {
+		int result = 0;
+		String query = "update JSL_어연진_PDS\r\n" + 
+				"set attach = null\r\n" + 
+				"where no = '"+no+"'";
+		
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement(query);
+			result = ps.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println("deletePds() method error\n"+query);
+			e.printStackTrace();
+		} finally {
+			DBConnection.closeDB(con, ps, rs);
+		}
+		
+		return result;
+	}
+	
+	//Ajax 첨부파일 삭제
+	public int pdsAttachDelete(String no) {
+		int result = 0;
+		String query = "update JSL_어연진_PDS\r\n" + 
+				"set attach = null\r\n" + 
+				"where no = '"+no+"'";
+		
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement(query);
+			result = ps.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println("pdsAttachDelete() method error\n"+query);
+			e.printStackTrace();
+		} finally {
+			DBConnection.closeDB(con, ps, rs);
+		}
+		
+		return result;
+	}
 }
