@@ -37,6 +37,7 @@
 </script>
 <form name="pds">
 	<input type="hidden" name="t_no" value="<%=no %>">
+	<input type="hidden" name="t_delAttach" value="<%=dto.getAttach() %>">
 </form>	
 	<!-- sub contents -->
 	<div class="sub_title">

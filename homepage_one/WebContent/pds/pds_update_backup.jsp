@@ -54,24 +54,6 @@
 		pds.action="db_pds_update.jsp";
 		pds.submit();
 	}
-	
-	function checkDel(){
-		if(confirm("첨부파일을 삭제 하시겠습니까?")){
-	  		$.ajax({
-	  			type:"post",
-	  			url :"db_attach_delete.jsp",
-	  			data:"t_no="+pds.t_no.value+"&t_attach="+pds.t_delete_attach.value,
-	  			dataType:"text",
-	  			error:function(){
-	  				alert("통신 실패");
-	  			},
-	  			success:function(data){
-	  				var result = $.trim(data);	//공백 사라지게 하는 메소드
-	  				if(result == "첨부파일이 삭제 되었습니다.") document.getElementById("divAttach").style.display="none";
-	  			}
-	  		});
-		}else document.getElementById("board_img").checked = false;
-	}
 </script>	
 	<!-- sub contents -->
 	<div class="sub_title">
@@ -145,11 +127,9 @@
 						<td colspan="3">
 							<input type="file" name="t_attach">
 							<%if(!dto.getAttach().equals("첨부파일 없음")){ %>
-								<div id="divAttach">
-									<img src="../images/file.png" class="board_img">
-									<%=dto.getAttach() %>&nbsp;&nbsp;삭제<input type="checkbox" onClick="checkDel()" name="t_delete_attach" class="normal" value="<%=dto.getAttach() %>">
-									<input type="hidden" name="t_ori_attach" value="<%=dto.getAttach() %>">
-								</div>
+								<img src="../images/file.png" class="board_img">
+								<%=dto.getAttach() %>&nbsp;&nbsp;삭제<input type="checkbox" name="t_delete_attach" class="normal" value="<%=dto.getAttach() %>">
+								<input type="hidden" name="t_ori_attach" value="<%=dto.getAttach() %>">
 							<%}%>
 						</td>
 					</tr>

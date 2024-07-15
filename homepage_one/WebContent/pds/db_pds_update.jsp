@@ -27,7 +27,7 @@
 	
 	//기존 파일 삭제
 	boolean delFile = false;
-	if(delete_attach!= null) {
+	if(delete_attach != null) {
 		File file = new File(CommonUtil.getPdsDir(), delete_attach);
 		delFile = file.delete();
 		if(!delFile) System.out.print("자료실 수정 첨부파일 삭제 오류 - 기존 파일 삭제 db_pds_update.jsp");
@@ -46,7 +46,7 @@
 	String update_id = (String)session.getAttribute("sessionId");
 	String update_date = CommonUtil.getTodayTime();
 	
-	PdsDto dto = new PdsDto(no, title, content, attach, "", "", update_id, update_date);
+	PdsDto dto = new PdsDto(no, title, content, saveAttachName, "", "", update_id, update_date);
 	int result = dao.updatePds(dto); 
 	String msg = "자료실 게시글이 수정되었습니다";
 	
