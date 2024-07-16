@@ -252,7 +252,7 @@ public class NoticeDao {
 	public int noticeUpdate(NoticeDto dto) {
 		int result = 0;
 		String query = "update JSL_어연진_NOTICE set\r\n" + 
-				"title = '"+dto.getTitle()+"', content = '"+dto.getContent()+"'\r\n" + 
+				"title = '"+dto.getTitle()+"', content = '"+dto.getContent()+"', attach='"+dto.getAttach()+"'\r\n" + 
 				"where no = '"+dto.getNo()+"'";
 		
 		try {
@@ -281,6 +281,27 @@ public class NoticeDao {
 			result = ps.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println("noticeUpdate() method error\n"+query);
+			e.printStackTrace();
+		} finally {
+			DBConnection.closeDB(con, ps, rs);
+		}
+		
+		return result;
+	}
+	
+	//Ajax 첨부파일 삭제
+	public int noticeAttachDelete(String no) {
+		int result = 0;
+		String query = "update JSL_어연진_notice\r\n" + 
+				"set attach = null\r\n" + 
+				"where no = '"+no+"'";
+		
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement(query);
+			result = ps.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println("noticeAttachDelete() method error\n"+query);
 			e.printStackTrace();
 		} finally {
 			DBConnection.closeDB(con, ps, rs);
