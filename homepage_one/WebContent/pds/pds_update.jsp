@@ -67,7 +67,10 @@
 	  			},
 	  			success:function(data){
 	  				var result = $.trim(data);	//공백 사라지게 하는 메소드
-	  				if(result == "첨부파일이 삭제 되었습니다.") document.getElementById("divAttach").style.display="none";
+	  				if(result == "첨부파일이 삭제 되었습니다.") {
+	  					document.getElementById("divAttach").style.display="none";
+	  					pds.t_ori_attach.value = "";
+	  				}
 	  			}
 	  		});
 		}else document.getElementById("board_img").checked = false;
@@ -147,7 +150,7 @@
 							<%if(!dto.getAttach().equals("첨부파일 없음")){ %>
 								<div id="divAttach">
 									<img src="../images/file.png" class="board_img">
-									<%=dto.getAttach() %>&nbsp;&nbsp;삭제<input type="checkbox" onClick="checkDel()" name="t_delete_attach" class="normal" value="<%=dto.getAttach() %>">
+									<%=dto.getAttach() %>&nbsp;&nbsp;삭제<input type="checkbox" onClick="checkDel()" name="t_delete_attach" class="normal" value="<%=dto.getAttach() %>" id="board_img">
 									<input type="hidden" name="t_ori_attach" value="<%=dto.getAttach() %>">
 								</div>
 							<%}%>

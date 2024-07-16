@@ -23,6 +23,27 @@
 		noti.action="db_notice_update.jsp";
 		noti.submit();
 	}
+	
+	function checkDel(){
+		if(confirm("첨부파일을 삭제 하시겠습니까?")){
+	  		$.ajax({
+	  			type:"post",
+	  			url :"db_attach_delete.jsp",
+	  			data:"t_no="+noti.t_no.value+"&t_attach="+noti.t_delete_attach.value,
+	  			dataType:"text",
+	  			error:function(){
+	  				alert("통신 실패");
+	  			},
+	  			success:function(data){
+	  				var result = $.trim(data);	//공백 사라지게 하는 메소드
+	  				if(result == "첨부파일이 삭제 되었습니다.") {
+	  					document.getElementById("divAttach").style.display="none";
+	  					noti.t_ori_attach.value = "";
+	  				}
+	  			}
+	  		});
+		}else document.getElementById("board_img").checked = false;
+	}
 </script>
 <!-- sub contents -->
 	<div class="sub_title">
@@ -64,7 +85,7 @@
 	  <div class="write_wrap">
 	  <h2 class="sr-only">공지사항 글쓰기</h2>
 	  <!-- action을 처리하기전에 check()사용자 함수를 실행하고 되돌아 와라-->
-	  	<form name="noti">
+	  	<form name="noti" enctype="multipart/form-data">
 	  		<input type="hidden" name="t_no" value="<%=no %>">
 			<table class="bord_table">
 				<caption class="sr-only">공지사항 입력 표</caption>
@@ -90,12 +111,21 @@
 								String content = dto.getContent();
 								content = content.replace("\"", "&quot;");
 							%>
-							<textarea name="t_content"><%=dto.getContent() %></textarea>
+							<textarea name="t_content"><%=content%></textarea>
 						</td>
 					</tr>
 					<tr>
 						<th>첨부</th>
-						<td colspan="3"><input type="file" name="t_attach"></td>
+						<td colspan="3">
+							<input type="file" name="t_attach">
+							<%if(!dto.getAttach().equals("첨부파일 없음")){ %>
+								<div id="divAttach">
+									<img src="../images/file.png" class="board_img">
+									<%=dto.getAttach() %>&nbsp;&nbsp;삭제<input type="checkbox" onClick="checkDel()" name="t_delete_attach" class="normal" value="<%=dto.getAttach() %>" id="board_img">
+									<input type="hidden" name="t_ori_attach" value="<%=dto.getAttach() %>">
+								</div>
+							<%}%>
+						</td>
 					</tr>
 					<tr>
 						<th>글쓴이</th>
