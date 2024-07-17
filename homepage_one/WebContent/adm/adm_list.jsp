@@ -1,6 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-  
+<%@page import="dao.*, dto.*, java.util.*"%>
+<%
+	AdmDao dao = new AdmDao();
+	ArrayList<AdmDto> dtos = dao.getAdmList();
+%>
 <%@ include file="../common_header.jsp" %>
 <%if(!sessionLevel.equals("top")){ %>  
 	<script type="text/javascript">
@@ -10,12 +14,12 @@
 <%}%>
 	<!-- sub contents -->
 	<div class="sub_title">
-		<h2>관리자 로그인</h2>
+		<h2>회원 목록</h2>
 		<div class="container">
 		  <div class="location">
 			<ul>
 				<li class="btn_home">
-					<a href="index.html"><i class="fa fa-home btn_plus"></i></a>
+					<a href="../index.jsp"><i class="fa fa-home btn_plus"></i></a>
 				</li>
 				<li class="dropdown">
 					<a href="">커뮤니티<i class="fa fa-plus btn_plus"></i></a>
@@ -35,7 +39,7 @@
 						<a href="../qna/qna_list.jsp">질문과답변</a>
 						<a href="../faq/faq_list.jsp">FAQ</a>
 						<a href="../pds/pds_list.jsp">자료실</a>
-						<a href="admin_list.jsp">관리자</a>
+						<a href="adm_list.jsp">관리자</a>
 					</div>
 				</li>
 			</ul>
@@ -43,37 +47,79 @@
 		</div><!-- container end -->
 	</div>
 
-	<div class="bg_admim">
-		<div class="container">
-			<div class="grap">
-				<form name="admin" method="post" action="">
-					<fieldset>
-						<legend class="sr-only">관리자로그인</legend>
-						<label for="id" class="sr-only">아이디입력</label><input type="text" name="id" placeholder="아이디를 입력하세요" id="id">
-						<label for="pw" class="sr-only">패스워드입력</label><input type="password" name="pw" placeholder="패스워드를 입력하세요" id="pw">
-						<a href="javascript:void(0)" onClick="admin_check();" class="btn_admin">로그인</a>
-					</fieldset>
-				</form>
-			</div>
+	<div class="container">
+	  <div class="search_wrap">
+		<div class="record_group">
+			<p>총게시글<span><%=dtos.size() %></span>건</p>
 		</div>
+		<div class="search_group">
+			<form name="noti" method="post" action="notice_list.jsp">
+				<select name="t_select" class="select">
+					<option value="title" <% out.print("selected"); %>>제목</option>
+					<option value="content" <% out.print("selected"); %>>내용</option>
+				</select>
+				<input type="text" name="t_search" value="" class="search_word">
+				<button class="btn_search" type="submit"><i class="fa fa-search"></i><span class="sr-only">검색버튼</span></button>
+			</form>
+		</div>
+	  </div> <!-- search end -->
+	  <div class="bord_list">
+		<table class="bord_table" summary="이표는 번호,제목,글쓴이,날자,조회수로 구성되어 있습니다">
+			<caption class="sr-only">공지사항 리스트</caption>
+			<colgroup>
+				<col width="10%">
+				<col width="10%">
+				<col width="10%">
+				<col width="*">
+				<col width="*">
+				<col width="10%">
+			</colgroup>
+			<thead>
+				<tr>
+					<th>번호</th>
+					<th>아이디</th>
+					<th>이름</th>
+					<th>이메일</th>
+					<th>전화번호</th>
+					<th>탈퇴여부</th>
+				</tr>
+			</thead>
+			<tbody>
+			<%for(AdmDto dto: dtos){ %>
+				<tr>
+					<td><%=dto.getNo() %></td>
+					<td class="title"><a href="javascript:goView('')"><%=dto.getId() %></a></td>
+					<td><%=dto.getName() %></td>
+					<td><%=dto.getEmail_1() %>@<%=dto.getEmail_2() %></td>
+					<td><%=dto.getMobile_1() %>-<%=dto.getMobile_2() %>-<%=dto.getMobile_3() %></td>
+					<%if(dto.getExit_date() == null){ %>
+						<td></td>
+					<%} else { %>
+						<td><img src=""></td>
+					<%} %>	
+				</tr>
+			<%} %>	
+			</tbody>
+		</table>
+		<div class="paging">
+
+		<!--  
+			<a href=""><i class="fa  fa-angle-double-left"></i></a>
+			<a href=""><i class="fa fa-angle-left"></i></a>
+			<a href="" class='active'>1</a>
+			<a href='notice_list.jsp'>2</a>
+			<a href='notice_list.jsp'>3</a>
+			<a href='notice_list.jsp'>4</a>
+			<a href="">5</a>
+			<a href=""><i class="fa fa-angle-right"></i></a>
+			<a href=""><i class="fa  fa-angle-double-right"></i></a>
+		-->	
+			
+		</div>
+	  </div>
 	</div>
 	<!-- end contents -->
-	<script type="text/javascript">
-		function admin_check() {
-			if(admin.id.value=="") {
-				alert("아이디입력");
-				admin.id.focus();
-				return false;
-			}
-			if (admin.pw.value=="") {
-				alert("패스워드입력");
-				admin.pw.focus();
-				return false;
-			}
-			admin.submit();
-		}
-	</script>
-
+	
 	<script>
 		$(function() {
 			$(".location  .dropdown > a").on("click",function(e) {
