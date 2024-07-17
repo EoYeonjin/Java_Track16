@@ -1,6 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+  
 <%@ include file="../common_header.jsp" %>
+<%if(!sessionLevel.equals("top")){ %>  
+	<script type="text/javascript">
+		alert("관리자 화면입니다.");
+		location.href="../index.jsp";
+	</script>
+<%}%>
 	<!-- sub contents -->
 	<div class="sub_title">
 		<h2>관리자 로그인</h2>
@@ -23,10 +30,12 @@
 				<li class="dropdown">
 					<a href="">관리자<i class="fa fa-plus btn_plus"></i></a>
 					<div class="dropdown_menu">
-						<a href="notice.html">공지사항</a>
-						<a href="qa.html">질문과답변</a>
-						<a href="faq.html">FAQ</a>
-						<a href="admin.html">관리자</a>
+						<a href="../notice/notice_list.jsp">공지사항</a>
+						<a href="../news/news_list.jsp">NEWS</a>
+						<a href="../qna/qna_list.jsp">질문과답변</a>
+						<a href="../faq/faq_list.jsp">FAQ</a>
+						<a href="../pds/pds_list.jsp">자료실</a>
+						<a href="admin_list.jsp">관리자</a>
 					</div>
 				</li>
 			</ul>
@@ -80,9 +89,9 @@
 	</script>
 	
 
-	<?php
-		include "footer.html";
-	?>
+	<footer class="footer">
+		<%@ include file="../common_footer.jsp" %>
+	</footer>
 
  </body>
 </html>

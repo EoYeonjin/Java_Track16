@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%
 	String sessionName = (String)session.getAttribute("sessionName");
+	String sessionLevel = (String)session.getAttribute("sessionLevel");
 %>    
 <!doctype html>
 <html lang="ko">
@@ -106,10 +107,14 @@
 						<li><a href="notice/notice_list.jsp">커뮤니티</a>
 							<ul class="nav_2depth">
 								<li><a href="notice/notice_list.jsp">공지사항</a></li>
+								<li><a href="news/news_list.jsp">NEWS</a></li>
 								<li><a href="qna/qna_list.jsp">질문과답변</a></li>
 								<li><a href="faq/faq_list.jsp">FAQ</a></li>
 								<li><a href="pds/pds_list.jsp">자료실</a></li>
-								<li><a href="adm/adm_list.jsp">관리자</a></li>
+								<%if(sessionLevel.equals("top")){ %>
+									<li><a href="adm/adm_list.jsp">관리자</a></li>
+								<%} %>
+								
 							</ul>
 						</li>
 					</ul>

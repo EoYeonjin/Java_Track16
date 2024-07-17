@@ -70,7 +70,9 @@
 						<a href="../qna/qna_list.jsp">질문과답변</a>
 						<a href="../faq/faq_list.jsp">FAQ</a>
 						<a href="../pds/pds_list.jsp">자료실</a>
-						<a href="gratings.html">취업실적</a>
+						<%if(sessionLevel.equals("top")){ %>
+							<li><a href="../adm/adm_list.jsp">관리자</a></li>
+						<%} %>
 					</div>
 				</li>
 			</ul>
