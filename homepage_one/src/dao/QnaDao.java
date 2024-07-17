@@ -316,7 +316,7 @@ public class QnaDao {
 			con = DBConnection.getConnection();
 			ps = con.prepareStatement(query);
 			rs = ps.executeQuery();
-			
+			  
 			if(rs.next()) {
 				no = rs.getString("no");
 				String title = rs.getString("title");
