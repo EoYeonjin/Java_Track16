@@ -11,13 +11,23 @@ public class NewsDto {
 		this.title = title;
 		this.ipt = ipt;
 	}
-
+	
 	//수정
 	public NewsDto(String no, String title, String content, String ipt) {
 		super();
 		this.no = no;
 		this.title = title;
 		this.content = content;
+		this.ipt = ipt;
+	}
+	
+	//최신 게시글 조회 & 4건 조회
+	public NewsDto(String no, String title, String content, String reg_date, String ipt) {
+		super();
+		this.no = no;
+		this.title = title;
+		this.content = content;
+		this.reg_date = reg_date;
 		this.ipt = ipt;
 	}
 

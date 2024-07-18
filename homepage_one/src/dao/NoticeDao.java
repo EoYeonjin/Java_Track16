@@ -309,4 +309,71 @@ public class NoticeDao {
 		
 		return result;
 	}
+	
+	//index.jsp 공지사항 최신글 조회
+	public NoticeDto getRtNotice() {
+		NoticeDto dto = null;
+		String query = "select n.no, n.title, n.content, to_char(n.reg_date, 'yyyy-MM-dd') as reg_date\r\n" + 
+				"from(\r\n" + 
+				"    select max(reg_date) as reg_date from jsl_어연진_notice\r\n" + 
+				"    )a, jsl_어연진_notice n\r\n" + 
+				"where a.reg_date = n.reg_date";
+		
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement(query);
+			rs = ps.executeQuery();
+			
+			if(rs.next()) {
+				String no = rs.getString("no");
+				String title = rs.getString("title");
+				String content = rs.getString("content");
+				String reg_date = rs.getString("reg_date");
+				
+				dto = new NoticeDto(no, title, content, reg_date);
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("getNextNotice() method error\n"+query);
+			e.printStackTrace();
+		} finally {
+			DBConnection.closeDB(con, ps, rs);
+		}
+		
+		return dto;
+	}
+	
+	//게시글 4개 조회
+	public ArrayList<NoticeDto> getNoticeList4(){
+		ArrayList<NoticeDto> dtos = new ArrayList<NoticeDto>();
+		String query = "select n.no, n.title, to_char(n.reg_date, 'yyyy-MM-dd') as reg_date\r\n" + 
+				"from(\r\n" + 
+				"    select count(*) as count from jsl_어연진_notice\r\n" + 
+				"    )a, jsl_어연진_notice n\r\n" + 
+				"where n.no >= (a.count - 4) and n.no < a.count \r\n" + 
+				"order by to_number(no) desc";
+		
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement(query);
+			rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				String no = rs.getString("no");
+				String title = rs.getString("title");
+				String content = "";
+				String reg_date = rs.getString("reg_date");
+				
+				dtos.add(new NoticeDto(no, title, content, reg_date));
+			}
+			
+		}  catch (SQLException e) {
+			System.out.println("getNoticeList4() method error\n"+query);
+			e.printStackTrace();
+		} finally {
+			DBConnection.closeDB(con, ps, rs);
+		}
+		
+		return dtos;
+	}
 }

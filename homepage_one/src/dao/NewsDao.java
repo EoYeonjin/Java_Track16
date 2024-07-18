@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import common.DBConnection;
 import dto.NewsDto;
+import dto.NoticeDto;
 
 public class NewsDao {
 	Connection con;
@@ -285,5 +286,74 @@ public class NewsDao {
 		}
 		
 		return dto;
+	}
+	
+	//최신 뉴스 조회
+	public NewsDto getRtNews() {
+		NewsDto dto = null;
+		String query = "select n.no, n.ipt, n.title, n.content, to_char(n.reg_date, 'yyyy-MM-dd') as reg_date\r\n" + 
+				"from(\r\n" + 
+				"    select max(reg_date) as reg_date from jsl_어연진_news\r\n" + 
+				"    )a, jsl_어연진_news n\r\n" + 
+				"where a.reg_date = n.reg_date";
+		
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement(query);
+			rs = ps.executeQuery();
+			
+			if(rs.next()) {
+				String no = rs.getString("no");
+				String title = rs.getString("title");
+				String content = rs.getString("content");
+				String reg_date = rs.getString("reg_date");
+				String ipt = rs.getString("ipt");
+				
+				dto = new NewsDto(no, title, content, reg_date, ipt);
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("getRtNews() method error\n"+query);
+			e.printStackTrace();
+		} finally {
+			DBConnection.closeDB(con, ps, rs);
+		}
+		
+		return dto;
+	}
+	
+	//뉴스 4건 조회
+	public ArrayList<NewsDto> getNoticeList4(){
+		ArrayList<NewsDto> dtos = new ArrayList<NewsDto>();
+		String query = "select n.no, n.ipt, n.title, to_char(n.reg_date, 'yyyy-MM-dd') as reg_date\r\n" + 
+				"from(\r\n" + 
+				"    select count(*) as count from jsl_어연진_news\r\n" + 
+				"    )a, jsl_어연진_news n\r\n" + 
+				"where n.no >= (a.count - 4) and n.no < a.count \r\n" + 
+				"order by to_number(no) desc";
+		
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement(query);
+			rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				String no = rs.getString("no");
+				String title = rs.getString("title");
+				String content = "";
+				String reg_date = rs.getString("reg_date");
+				String ipt = rs.getString("ipt");
+				
+				dtos.add(new NewsDto(no, title, content, reg_date, ipt));
+			}
+			
+		}  catch (SQLException e) {
+			System.out.println("getNoticeList4() method error\n"+query);
+			e.printStackTrace();
+		} finally {
+			DBConnection.closeDB(con, ps, rs);
+		}
+		
+		return dtos;
 	}
 }

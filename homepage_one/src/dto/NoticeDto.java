@@ -11,6 +11,15 @@ public class NoticeDto {
 		this.title = title;
 	}
 	
+	//최신글 조회 & 게시글 4건 조회
+	public NoticeDto(String no, String title, String content, String reg_date) {
+		super();
+		this.no = no;
+		this.title = title;
+		this.content = content;
+		this.reg_date = reg_date;
+	}
+
 	//저장, 수정
 	public NoticeDto(String no, String title, String content, String attach, String reg_id, String reg_date) {
 		super();
