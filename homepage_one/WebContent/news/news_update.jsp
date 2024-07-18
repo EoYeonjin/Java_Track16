@@ -52,7 +52,7 @@
 						<a href="../faq/faq_list.jsp">FAQ</a>
 						<a href="../pds/pds_list.jsp">자료실</a>
 						<%if(sessionLevel.equals("top")){ %>
-							<li><a href="../adm/adm_list.jsp">관리자</a></li>
+							<a href="../adm/adm_list.jsp">관리자</a>
 						<%} %>
 					</div>
 				</li>

@@ -11,7 +11,7 @@
 	String content = request.getParameter("t_content");
 	content = content.replace("'", "&#39;");
 	
-	NoticeDto dto = new NoticeDto(no, title, content, "", "");
+	NoticeDto dto = new NoticeDto(no, title, content, "", "", "");
 	
 	int result = dao.noticeUpdate(dto); 
 	String msg = "공지사항 수정 되었습니다";

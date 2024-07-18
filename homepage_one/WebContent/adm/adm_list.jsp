@@ -1,9 +1,42 @@
+<%@page import="common.CommonUtil"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@page import="dao.*, dto.*, java.util.*"%>
 <%
+	request.setCharacterEncoding("utf-8");
 	AdmDao dao = new AdmDao();
-	ArrayList<AdmDto> dtos = dao.getAdmList();
+	
+	String select = request.getParameter("t_select");
+	String search = request.getParameter("t_search");
+	
+	if(select == null){
+		select = "id";
+		search = "";
+	}
+	
+	search = search.replace("'", "&#39;");
+	
+	/* paging 설정 start*/
+	int totalCount = dao.getTotalCount(select,search);
+	int list_setup_count = 4;  //한페이지당 출력 행수 
+	int pageNumber_count = 3;  //한페이지당 출력 페이지 갯수
+	
+	String nowPage = request.getParameter("t_nowPage");
+	int current_page = 0; // 현재페이지 번호
+	int total_page = 0;    // 전체 페이지 수
+	
+	if(nowPage == null || nowPage.equals("")) current_page = 1; 
+	else current_page = Integer.parseInt(nowPage);
+	
+	total_page = totalCount / list_setup_count;  // 몫 : 2
+	int rest = 	totalCount % list_setup_count;   // 나머지:1
+	if(rest !=0) total_page = total_page + 1;     // 3
+	
+	int start = (current_page -1) * list_setup_count + 1;
+	int end   = current_page * list_setup_count;
+	/* paging 설정 end*/
+		
+	ArrayList<AdmDto> dtos = dao.getAdmList(select, search, start, end);
 %>
 <%@ include file="../common_header.jsp" %>
 <%if(!sessionLevel.equals("top")){ %>  
@@ -12,6 +45,32 @@
 		location.href="../index.jsp";
 	</script>
 <%}%>
+<script type="text/javascript">
+	function goView(id){
+		viewForm.t_id.value = id
+		viewForm.method="post";
+		viewForm.action="adm_view.jsp";
+		viewForm.submit();
+	}
+	
+	function goPage(pageNumber){
+		pageForm.t_nowPage.value = pageNumber;
+		pageForm.method="post";
+		pageForm.action="adm_list.jsp";
+		pageForm.submit();
+	}
+</script>
+<form name="viewForm">
+	<input type="hidden" name="t_id">
+</form>
+<form name="pageForm">
+	<input type="hidden" name="t_nowPage">
+	<%
+		search = search.replace("\"", "&quot;");
+	%>
+	<input type="hidden" name="t_select" value="<%=select %>">
+	<input type="hidden" name="t_search" value="<%=search %>">
+</form>
 	<!-- sub contents -->
 	<div class="sub_title">
 		<h2>회원 목록</h2>
@@ -50,15 +109,15 @@
 	<div class="container">
 	  <div class="search_wrap">
 		<div class="record_group">
-			<p>총게시글<span><%=dtos.size() %></span>건</p>
+			<p>총회원수<span><%=totalCount %></span>명</p>
 		</div>
 		<div class="search_group">
-			<form name="noti" method="post" action="notice_list.jsp">
+			<form name="noti" method="post" action="adm_list.jsp">
 				<select name="t_select" class="select">
-					<option value="title" <% out.print("selected"); %>>제목</option>
-					<option value="content" <% out.print("selected"); %>>내용</option>
+					<option value="id" <%if(select.equals("id")) out.print("selected"); %>>ID</option>
+					<option value="name" <%if(select.equals("name")) out.print("selected"); %>>이름</option>
 				</select>
-				<input type="text" name="t_search" value="" class="search_word">
+				<input type="text" name="t_search" value="<%=search %>" class="search_word">
 				<button class="btn_search" type="submit"><i class="fa fa-search"></i><span class="sr-only">검색버튼</span></button>
 			</form>
 		</div>
@@ -69,10 +128,10 @@
 			<colgroup>
 				<col width="10%">
 				<col width="10%">
-				<col width="10%">
 				<col width="*">
 				<col width="*">
-				<col width="10%">
+				<col width="*">
+				<col width="10%"> 
 			</colgroup>
 			<thead>
 				<tr>
@@ -88,21 +147,24 @@
 			<%for(AdmDto dto: dtos){ %>
 				<tr>
 					<td><%=dto.getNo() %></td>
-					<td class="title"><a href="javascript:goView('')"><%=dto.getId() %></a></td>
-					<td><%=dto.getName() %></td>
+					<td style="text-align:center"><a href="javascript:goView('<%=dto.getId() %>')"><%=dto.getId() %></a></td>
+					<td><a href="javascript:goView('<%=dto.getId() %>')"><%=dto.getName() %></a></td>
 					<td><%=dto.getEmail_1() %>@<%=dto.getEmail_2() %></td>
-					<td><%=dto.getMobile_1() %>-<%=dto.getMobile_2() %>-<%=dto.getMobile_3() %></td>
+					<td><%=dto.getMobile_1() %> - <%=dto.getMobile_2() %> - <%=dto.getMobile_3() %></td>
 					<%if(dto.getExit_date() == null){ %>
 						<td></td>
 					<%} else { %>
-						<td><img src=""></td>
+						<td><img src="../images/delete-user.png"  class="img_exit"></td>
 					<%} %>	
 				</tr>
 			<%} %>	
 			</tbody>
 		</table>
 		<div class="paging">
-
+		<%
+			String pageDis = CommonUtil.pageListPost(current_page, total_page, pageNumber_count);
+			out.print(pageDis);
+		%>
 		<!--  
 			<a href=""><i class="fa  fa-angle-double-left"></i></a>
 			<a href=""><i class="fa fa-angle-left"></i></a>

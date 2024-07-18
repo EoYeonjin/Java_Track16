@@ -274,6 +274,7 @@ text-shadow:1px 1px 2px rgba(0,0,0,0.3);}
 
 .complet {background:#8893ab; color:#fff;padding:5px 8px;}
 .waiting {background:#0489B1; color:#fff;padding:5px 8px;}
+.img_exit{width:20px; height:20px}
 
 /* faq css */
 
@@ -440,6 +441,14 @@ text-shadow:1px 1px 2px rgba(0,0,0,0.3);}
     margin: 0 auto;
     margin-top: 0px;
 }
+.col_400 {
+    float: none;
+    clear: both;
+    width: 400Px;
+    margin: 0 auto;
+    margin-top: 0px;
+    text-align: center;
+}
 .join_write {
     padding: 10px 0;
     border-top: 1px solid #ddd;
@@ -533,6 +542,10 @@ a:link {
 }
 .btn_BlueGray {
     background: #8d9aaf !important;
+    color: #fff !important;
+}
+.btn_RedOrange {
+    background: #FF5349 !important;
     color: #fff !important;
 }
 .btn_large {

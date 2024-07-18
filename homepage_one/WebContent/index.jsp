@@ -1,8 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="dao.*, dto.*,java.util.*" %>    
 <%
 	String sessionName = (String)session.getAttribute("sessionName");
 	String sessionLevel = (String)session.getAttribute("sessionLevel");
+	
+	NoticeDao noticeDao = new NoticeDao();
+	NewsDao newDao = new NewsDao();
+	
+	NoticeDto noticeDto = noticeDao.getRtNotice();
+	ArrayList<NoticeDto> noticeDtos = noticeDao.getNoticeList4(); 
+	
+	NewsDto newsDto = newDao.getRtNews();
+	ArrayList<NewsDto> newsDtos = newDao.getNoticeList4();
 %>    
 <!doctype html>
 <html lang="ko">
@@ -111,7 +121,7 @@
 								<li><a href="qna/qna_list.jsp">질문과답변</a></li>
 								<li><a href="faq/faq_list.jsp">FAQ</a></li>
 								<li><a href="pds/pds_list.jsp">자료실</a></li>
-								<%if(sessionLevel.equals("top")){ %>
+								<%if(sessionLevel != null && sessionLevel.equals("top")){ %>
 									<li><a href="adm/adm_list.jsp">관리자</a></li>
 								<%} %>
 								
@@ -154,7 +164,26 @@
 
 			});
 	</script>
-
+	<script type="text/javascript">
+		function goNoticeView(no){
+			viewForm.t_no.value = no;
+			viewForm.method="post";
+			viewForm.action="/homepage_one/notice/notice_view.jsp";
+			viewForm.submit();
+		}
+		
+		function goNewsView(no, ipt){
+			viewForm.t_no.value = no;
+			viewForm.t_ipt.value = ipt;
+			viewForm.method="post";
+			viewForm.action="/homepage_one/news/news_view.jsp";
+			viewForm.submit();
+		}
+	</script>
+	<form name="viewForm">
+		<input type="hidden" name="t_no">
+		<input type="hidden" name="t_ipt">
+	</form>
 	<section id="main_visual">
 		<div class="visual_wrap">
 			<h2 class="sr-only">메인 비쥬얼</h2>
@@ -246,41 +275,73 @@
 				<nav>
 					<ul>
 						<li class="active"><a href="#tabview1">공지사항</a></li>
-						<li><a href="#tabview2">졸업후기</a></li>
+						<li><a href="#tabview2">News</a></li>
 					</ul>
 				</nav>
 				<div class="noticelist clearfix active taball" id="tabview1">
 					<div class="recently">
 						<p class="title">
-							<a class="title" href="">빅데이터응용SW개발 양성과정 모집</a>
-							<span class="date">2018-09-27</span>
+						<a class="title" href="javascript:goNoticeView('<%=noticeDto.getNo() %>')">
+								<%
+									String title = noticeDto.getTitle();
+									if(title.length() > 15) title = title.substring(0, 15)+"...";
+									out.print(title);
+								%>
+							</a>
+							<span class="date"><%=noticeDto.getReg_date() %></span>
 						</p>
 						<p class="text">
-							빅데이터처리, JAVA, JSP, PHP, DB을 이용한 응용소프트웨어 개발자를 모집중입니다...
+							<%
+								String content = noticeDto.getContent();
+								if(content.length() > 15) content = content.substring(0, 15)+"...";
+								out.print(content);
+							%>
 						</p>
 					</div>
 					<ul>
-						<li><a href="">HCI기반 UI/UX전문가양성과종 훈련생 모집</a><span class="date">201-09-27</span></li>
-						<li><a href="">품질경영전문가 훈련생 모집</a><span class="date">201-09-27</span></li>
-						<li><a href="">대전디자인경진대회 공지</a><span class="date">201-09-27</span></li>
-						<li><a href="">국비전액무료교육생 모집</a><span class="date">201-09-27</span></li>
+					<%for(NoticeDto fourDto: noticeDtos){ %>
+						<li>
+						<a href="javascript:goNoticeView('<%=fourDto.getNo() %>')">
+							<%
+								title = fourDto.getTitle();
+								if(title.length() > 15) title = title.substring(0, 15)+"...";
+								out.print(title);
+							%>
+						</a>
+						<span class="date"><%=fourDto.getReg_date() %></span></li>
+					<%} %>
 					</ul>
 				</div>
 				<div class="graduation  clearfix taball" id="tabview2">
 					<div class="recently">
 						<p class="title">
-							<a class="title" href="">내가 포기하지 않으면 실패은 없다</a>
-							<span class="date">2018-09-27</span>
+							<a class="title" href="javascript:goNewsView('<%=newsDto.getNo() %>', '<%=newsDto.getIpt() %>')">
+								<%
+									String news_title = noticeDto.getTitle();
+									if(news_title.length() > 15) news_title = news_title.substring(0, 15)+"...";
+									out.print(news_title);
+								%>
+							</a>
+							<span class="date"><%=newsDto.getReg_date() %></span>
 						</p>
 						<p class="text">
-							이런 저런 핑게를 대며 나는 20년간 나를 포기하면 살았다. 시간이 흐른 뒤에 ...
+							<%
+								String news_content = noticeDto.getContent();
+								if(news_content.length() > 15) news_content = news_content.substring(0, 15)+"...";
+								out.print(news_content);
+							%>
 						</p>
 					</div>
 					<ul>
-						<li><a href="">즐거움이 가득한 배움의 즐거움을 알다</a><span class="date">201-09-27</span></li>
-						<li><a href="">하자, 해보자, 할 수없다</a><span class="date">201-09-27</span></li>
-						<li><a href="">무엇 때문에 오늘도 다시 시작하는가</a><span class="date">201-09-27</span></li>
-						<li><a href="">남에게도 있는 시간과 노력을 투자하면</a><span class="date">201-09-27</span></li>
+					<%for(NewsDto fourDto: newsDtos){ %>
+						<li><a href="javascript:goNewsView('<%=fourDto.getNo() %>', '<%=fourDto.getIpt() %>')">
+							<%
+								news_title = fourDto.getTitle();
+								if(news_title.length() > 15) news_title = news_title.substring(0, 15)+"...";
+								out.print(news_title);
+							%>
+						</a><span class="date"><%=fourDto.getReg_date() %></span></li>
+					<%} %>
 					</ul>
 				</div>
 			</div>

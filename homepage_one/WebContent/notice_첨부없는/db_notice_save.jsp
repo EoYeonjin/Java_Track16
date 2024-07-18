@@ -13,7 +13,7 @@
 	String reg_id = (String)session.getAttribute("sessionId");
 	String reg_date = CommonUtil.getTodayTime();
 	
-	NoticeDto dto = new NoticeDto(no, title, content, reg_id, reg_date);
+	NoticeDto dto = new NoticeDto(no, title, content, reg_id, reg_date, "");
 	
 	int result = dao.noticeSave(dto); 
 	String msg = "공지사항 등록 되었습니다";

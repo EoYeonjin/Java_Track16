@@ -95,6 +95,9 @@
 						<a href="../qna/qna_list.jsp">질문과답변</a>
 						<a href="../faq/faq_list.jsp">FAQ</a>
 						<a href="pds_list.jsp">자료실</a>
+						<%if(sessionLevel.equals("top")){ %>
+							<a href="../adm/adm_list.jsp">관리자</a>
+						<%} %>
 					</div>
 				</li>
 			</ul>
