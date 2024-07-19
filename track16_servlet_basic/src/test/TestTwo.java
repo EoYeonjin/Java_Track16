@@ -29,7 +29,10 @@ public class TestTwo extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String name = "홍길동";
-		request.setAttribute(",t_name", name);
+		int age = 35;
+		
+		request.setAttribute("t_name", name);
+		request.setAttribute("t_age", age);
 		
 		RequestDispatcher rd = request.getRequestDispatcher("test/aaa.jsp");
 		rd.forward(request, response);
