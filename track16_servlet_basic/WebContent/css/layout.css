@@ -262,6 +262,7 @@ img.width100 {width:100%; border:1px solid #a2a2a2;}
 .write_wrap .input_80px {border:1px solid #dcdcdc; height:30px; width:80px; padding:0px 3px;}
 .write_wrap .input_50px {border:1px solid #dcdcdc; height:30px; width:50px; padding:0px 3px;}
 .write_wrap .input_40px {border:1px solid #dcdcdc; height:30px; width:40px; padding:0px 3px;}
+.write_wrap .input_30px {border:1px solid #dcdcdc; width:30px; padding:0px 3px;}
 
 /* login css */
 .login-group {overflow:hidden; width:40%; margin:0 auto; background-color:#1a2742; padding:5% 3% 3% 3%;}
