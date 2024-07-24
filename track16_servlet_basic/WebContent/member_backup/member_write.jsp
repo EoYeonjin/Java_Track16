@@ -13,10 +13,8 @@
 	<link href="css/layout.css" rel="stylesheet" >		
 	<script type="text/javascript">
 		function goSave(){
-			mem.t_gubun.value ="save";
 			mem.method="post";
-//			mem.action="DBMemberSave";
-			mem.action="Member";
+			mem.action="DBMemberSave";
 			mem.submit();
 		} 
 	</script>
@@ -29,7 +27,6 @@
 		</div>		
 		<div class="write_wrap">
 			<form name="mem">
-			<input type="hidden" name="t_gubun">
 			<div class="board_list">
 				<table class="board_table">
 					<colgroup>
@@ -72,7 +69,7 @@
 			</form>
 			<div class="btn_wrap">
 				<input type="button" onclick="goSave()" value="등록" class="btn_ok">&nbsp;&nbsp;
-				<input type="button" value="목록" onclick="location.href='Member'" class="btn_list">
+				<input type="button" value="목록" onclick="location.href='MemberList'" class="btn_list">
 			</div>
 		</div>
 	</div>

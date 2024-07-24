@@ -1,35 +1,46 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="dto.*,java.util.*" %>
+<%@ page import="dto.*" %>
 <%
-	ArrayList<AreaDto> dtos =
-		(ArrayList<AreaDto>)request.getAttribute("t_dtos");	
+	MemberDto dto = (MemberDto)request.getAttribute("t_dto");
 %>    
-<html> 
+<html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title>Track16 홍길동</title>
 	<link href="css/common.css" rel="stylesheet">
-	<link href="css/layout.css" rel="stylesheet" >		
+	<link href="css/layout.css" rel="stylesheet" >	
 	<script type="text/javascript">
-		function goSave(){
-			mem.t_gubun.value ="save";
+		function goUpdateForm(){
+			mem.t_gubun.value ="updateForm";
 			mem.method="post";
-//			mem.action="DBMemberSave";
+//			mem.action="MemberUpdate";
 			mem.action="Member";
 			mem.submit();
-		} 
+		}
+		function goDelete(){
+			if(confirm("삭제 하겠습니까?")){
+				mem.t_gubun.value ="delete";
+				mem.method="post";
+//				mem.action="DBMemberDelete";
+				mem.action="Member";
+				mem.submit();				
+			}
+		}
 	</script>
 </head>
 <body>
+<form name="mem">
+	<input type="hidden" name="t_gubun">
+	<input type="hidden" name="t_id" value="<%=dto.getId()%>">
+</form>
 	<div class="container">
-
+	
 		<div class="leftmargin">
 			<img src="images/jsl_logo.png"><h1>Track16 홍길동 회원관리</h1>
 		</div>		
 		<div class="write_wrap">
-			<form name="mem">
-			<input type="hidden" name="t_gubun">
+		
 			<div class="board_list">
 				<table class="board_table">
 					<colgroup>
@@ -40,46 +51,39 @@
 						<tr>
 							<th>ID</th>
 							<td class="th_left">
-								<input name="t_id"  class="input_100px" type="text">
+								<%=dto.getId()%>
 							</td>
 						</tr>
 						<tr>
 							<th>성명</th>
 							<td class="th_left">
-								<input name="t_name"  class="input_300px" type="text">
+								<%=dto.getName()%>
 							</td>
 						</tr>
 						<tr>
 							<th>지역</th>
 							<td class="th_left">
-								<select name="t_area" class="select">
-									<% for(AreaDto dto :dtos){ %>
-										<option value="<%=dto.getArea_code()%>"><%=dto.getArea_name()%></option>
-									<%} %>
-								</selct>							
+								<%=dto.getArea()%>
 							</td>
-						</tr>						
+						</tr>
 						<tr>
 							<th>나이</th>
 							<td class="th_left">
-								<input name="t_age"  class="input_100px" type="text">
+								<%=dto.getAge()%>
 							</td>
 						</tr>
-
 					</tbody>
 				</table>
 			</div>
-			</form>
 			<div class="btn_wrap">
-				<input type="button" onclick="goSave()" value="등록" class="btn_ok">&nbsp;&nbsp;
-				<input type="button" value="목록" onclick="location.href='Member'" class="btn_list">
+				<input type="button" onClick="location.href='Member'" value="목록" class="btn_list">
+				<input type="button" onClick="goUpdateForm()" value="수정" class="btn_list">
+				<input type="button" onClick="goDelete()" value="삭제" class="btn_list">
 			</div>
 		</div>
 	</div>
 </body>
 </html>
-
-
 
 
 

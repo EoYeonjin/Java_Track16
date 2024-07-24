@@ -24,29 +24,20 @@
 <script type="text/javascript">
 	function goSearch(){
 		mem.method="post";
-//		mem.action="MemberList";
-		mem.action="Member";
+		mem.action="MemberList";
 		mem.submit();
 	}
 	function goView(id){
-		memForm.t_gubun.value ="view";
-		memForm.t_id.value = id;
-		memForm.method="post";
-//		memForm.action="MemberView";
-		memForm.action="Member";
-		memForm.submit();
-	}
-	function goWriteForm(){
-		memForm.t_gubun.value ="writeForm";
-		memForm.method="post";
-		memForm.action="Member";
-		memForm.submit();
+		viewForm.t_id.value = id;
+		viewForm.method="post";
+		viewForm.action="MemberView";
+		viewForm.submit();
 	}
 </script>	
 </head>
 <body>
-<form name="memForm">
-	<input type="hidden" name="t_gubun">
+
+<form name="viewForm">
 	<input type="hidden" name="t_id">
 </form>
 
@@ -99,18 +90,11 @@
 			</tbody>
 		</table>
 		<div class="paging">
-			<a href="javascript:goWriteForm()" class="write">회원등록</a>
+			<a href="MemberWrite" class="write">회원등록</a>
 		</div>
 	</div>
  </body>
 </html>
-
-
-
-
-
-
-
 
 
 
