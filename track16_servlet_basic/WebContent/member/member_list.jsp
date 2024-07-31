@@ -1,13 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="dto.*,java.util.*" %>    
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>       
+<%@ page import="dto.*, java.util.*" %> 
 <%
+/**	request.setCharacterEncoding("utf-8");
 
-	ArrayList<MemberDto> dtos =
-			(ArrayList<MemberDto>)request.getAttribute("t_dtos");
+	ArrayList<MemberDto> dtos = (ArrayList<MemberDto>)request.getAttribute("t_dtos");
+
 	String select = (String)request.getAttribute("t_select");
 	String search = (String)request.getAttribute("t_search");
-%>    
+	
+	if(select == null) {
+		select = "id";
+		search = "";
+	}**/
+%>   
 <!DOCTYPE html>
 <html> 
 <head>
@@ -21,35 +28,25 @@
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">	
 	<link href="css/common.css" rel="stylesheet">
 	<link href="css/layout.css" rel="stylesheet" >	
-<script type="text/javascript">
-	function goSearch(){
-		mem.method="post";
-//		mem.action="MemberList";
-		mem.action="Member";
-		mem.submit();
-	}
-	function goView(id){
-		memForm.t_gubun.value ="view";
-		memForm.t_id.value = id;
-		memForm.method="post";
-//		memForm.action="MemberView";
-		memForm.action="Member";
-		memForm.submit();
-	}
-	function goWriteForm(){
-		memForm.t_gubun.value ="writeForm";
-		memForm.method="post";
-		memForm.action="Member";
-		memForm.submit();
-	}
-</script>	
 </head>
 <body>
-<form name="memForm">
-	<input type="hidden" name="t_gubun">
-	<input type="hidden" name="t_id">
-</form>
-
+	<script type="text/javascript">
+		function goSearch(){
+			mem.method="post";
+			mem.action="MemberList";
+			mem.submit();
+		}
+		
+		function goView(id){
+			viewForm.t_id.value = id;
+			viewForm.method="post";
+			viewForm.action="MemberView";
+			viewForm.submit();
+		}
+	</script>
+	<form name="viewForm">
+		<input type="hidden" name="t_id">
+	</form>
 	<div class="container">
 
 		<div class="leftmargin">
@@ -57,16 +54,16 @@
 		</div>		
 		<div class="search_wrap">
 			<div class="record_group">
-				<p>총 : <span><%=dtos.size()%></span> 명</p>
+				<p>총게시글 : <span>${t_dtos.size() }</span>건</p>
 			</div>
 			<form name="mem">
 				<div class="search_group">
-					<select name="t_select" class="select">
-						<option value="id" <%if(select.equals("id")) out.print("selected");%>>ID</option>
-						<option value="name" <%if(select.equals("name")) out.print("selected");%>>성명</option>
+					<select class="select" name="t_select">
+						<option value="id"  <c:if test="${t_select eq 'id'}">selected</c:if>>ID</option>
+						<option value="name" <c:if test="${t_select eq 'name'}">selected</c:if>>성명</option>
 					</select>
-					<input type="text" name="t_search" value="<%=search%>" class="search_word">
-					<button class="btn_search" onclick="goSearch()"><i class="fa fa-search"></i><span class="sr-only">검색버튼</span></button>
+					<input type="text" class="search_word" name="t_search" value="${t_search }">
+					<button class="btn_search" onClick="goSearch()"><i class="fa fa-search"></i><span class="sr-only">검색버튼</span></button>
 				</div>
 			</form>
 		</div>
@@ -88,33 +85,19 @@
 				</tr>
 			</thead>
 			<tbody>
-				<% for(MemberDto dto:dtos){ %>
+			<c:forEach var="dto" items="${t_dtos}">
 				<tr>
-					<td><a href="MemberView?t_id=<%=dto.getId()%>"><%=dto.getId()%></a></td>
-					<td><a href="javascript:goView('<%=dto.getId()%>')"><%=dto.getName()%></a></td>
-					<td><%=dto.getArea()%></td>
-					<td><%=dto.getAge()%></td>
+					<td><a href="MemberView?t_id=${dto.getId() }">${dto.getId() }</a></td>
+					<td><a href="javascript:goView('${dto.getId() }')">${dto.getName() }</a></td>
+					<td>${dto.getArea_name() }</td>
+					<td>${dto.getAge() }</td>
 				</tr>	
-				<%} %>
+			</c:forEach>
 			</tbody>
 		</table>
 		<div class="paging">
-			<a href="javascript:goWriteForm()" class="write">회원등록</a>
+			<a href="MemberWrite" class="write">회원등록</a>
 		</div>
 	</div>
  </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-

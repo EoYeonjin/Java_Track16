@@ -1,13 +1,36 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="dto.*,java.util.*" %>    
+<%@ page import="dto.*, java.util.*" %> 
 <%
+	request.setCharacterEncoding("utf-8");
 
-	ArrayList<MemberDto> dtos =
-			(ArrayList<MemberDto>)request.getAttribute("t_dtos");
+	ArrayList<MemberDto> dtos = (ArrayList<MemberDto>)request.getAttribute("t_dtos");
+
 	String select = (String)request.getAttribute("t_select");
 	String search = (String)request.getAttribute("t_search");
-%>    
+	
+	if(select == null) {
+		select = "id";
+		search = "";
+	}
+%>   
+<script type="text/javascript">
+	function goSearch(){
+		mem.method="post";
+		mem.action="MemberList";
+		mem.submit();
+	}
+	
+	function goView(id){
+		viewForm.t_id.value = id;
+		viewForm.method="post";
+		viewForm.action="MemberView";
+		viewForm.submit();
+	}
+</script>
+<form name="viewForm">
+	<input type="hidden" name="t_id">
+</form>
 <!DOCTYPE html>
 <html> 
 <head>
@@ -21,26 +44,8 @@
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">	
 	<link href="css/common.css" rel="stylesheet">
 	<link href="css/layout.css" rel="stylesheet" >	
-<script type="text/javascript">
-	function goSearch(){
-		mem.method="post";
-		mem.action="MemberList";
-		mem.submit();
-	}
-	function goView(id){
-		viewForm.t_id.value = id;
-		viewForm.method="post";
-		viewForm.action="MemberView";
-		viewForm.submit();
-	}
-</script>	
 </head>
 <body>
-
-<form name="viewForm">
-	<input type="hidden" name="t_id">
-</form>
-
 	<div class="container">
 
 		<div class="leftmargin">
@@ -48,16 +53,16 @@
 		</div>		
 		<div class="search_wrap">
 			<div class="record_group">
-				<p>총 : <span><%=dtos.size()%></span> 명</p>
+				<p>총게시글 : <span><%=dtos.size() %></span>건</p>
 			</div>
 			<form name="mem">
 				<div class="search_group">
-					<select name="t_select" class="select">
-						<option value="id" <%if(select.equals("id")) out.print("selected");%>>ID</option>
-						<option value="name" <%if(select.equals("name")) out.print("selected");%>>성명</option>
+					<select class="select" name="t_select">
+						<option value="id" <%if(select.equals("id")) out.print("selected"); %>>ID</option>
+						<option value="name" <%if(select.equals("name")) out.print("selected"); %>>성명</option>
 					</select>
-					<input type="text" name="t_search" value="<%=search%>" class="search_word">
-					<button class="btn_search" onclick="goSearch()"><i class="fa fa-search"></i><span class="sr-only">검색버튼</span></button>
+					<input type="text" class="search_word" name="t_search" value="<%=search %>">
+					<button class="btn_search" onClick="goSearch()"><i class="fa fa-search"></i><span class="sr-only">검색버튼</span></button>
 				</div>
 			</form>
 		</div>
@@ -79,14 +84,14 @@
 				</tr>
 			</thead>
 			<tbody>
-				<% for(MemberDto dto:dtos){ %>
+			<%for(MemberDto dto: dtos){ %>
 				<tr>
-					<td><a href="MemberView?t_id=<%=dto.getId()%>"><%=dto.getId()%></a></td>
-					<td><a href="javascript:goView('<%=dto.getId()%>')"><%=dto.getName()%></a></td>
-					<td><%=dto.getArea()%></td>
-					<td><%=dto.getAge()%></td>
+					<td><a href="MemberView?t_id=<%=dto.getId() %>"><%=dto.getId() %></a></td>
+					<td><a href="javascript:goView('<%=dto.getId() %>')"><%=dto.getName() %></td>
+					<td><%=dto.getArea_name() %></td>
+					<td><%=dto.getAge() %></td>
 				</tr>	
-				<%} %>
+			<%} %>
 			</tbody>
 		</table>
 		<div class="paging">
@@ -95,10 +100,3 @@
 	</div>
  </body>
 </html>
-
-
-
-
-
-
-

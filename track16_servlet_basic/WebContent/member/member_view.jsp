@@ -1,8 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>   
 <%@ page import="dto.*" %>
 <%
-	MemberDto dto = (MemberDto)request.getAttribute("t_dto");
+	//MemberDto dto = (MemberDto)request.getAttribute("t_dto");
 %>    
 <html>
 <head>
@@ -10,29 +11,25 @@
 	<title>Track16 홍길동</title>
 	<link href="css/common.css" rel="stylesheet">
 	<link href="css/layout.css" rel="stylesheet" >	
-	<script type="text/javascript">
-		function goUpdateForm(){
-			mem.t_gubun.value ="updateForm";
+<script type="text/javascript">
+	function goUpdateForm(){
+		mem.method="post";
+		mem.action="MemberUpdate";
+		mem.submit();
+	}
+	
+	function goDelete(){
+		if(confirm("삭제하시겠습니까?")){
 			mem.method="post";
-//			mem.action="MemberUpdate";
-			mem.action="Member";
+			mem.action="DBMemberDelete";
 			mem.submit();
 		}
-		function goDelete(){
-			if(confirm("삭제 하겠습니까?")){
-				mem.t_gubun.value ="delete";
-				mem.method="post";
-//				mem.action="DBMemberDelete";
-				mem.action="Member";
-				mem.submit();				
-			}
-		}
-	</script>
+	}
+</script>
 </head>
 <body>
 <form name="mem">
-	<input type="hidden" name="t_gubun">
-	<input type="hidden" name="t_id" value="<%=dto.getId()%>">
+	<input type="hidden" name="t_id" value="${t_dto.getId() }">
 </form>
 	<div class="container">
 	
@@ -40,7 +37,6 @@
 			<img src="images/jsl_logo.png"><h1>Track16 홍길동 회원관리</h1>
 		</div>		
 		<div class="write_wrap">
-		
 			<div class="board_list">
 				<table class="board_table">
 					<colgroup>
@@ -51,42 +47,36 @@
 						<tr>
 							<th>ID</th>
 							<td class="th_left">
-								<%=dto.getId()%>
+								${t_dto.getId() }
 							</td>
 						</tr>
 						<tr>
 							<th>성명</th>
 							<td class="th_left">
-								<%=dto.getName()%>
+								${t_dto.getName() }
 							</td>
 						</tr>
 						<tr>
 							<th>지역</th>
 							<td class="th_left">
-								<%=dto.getArea()%>
+								${t_dto.getArea() }
 							</td>
 						</tr>
 						<tr>
 							<th>나이</th>
 							<td class="th_left">
-								<%=dto.getAge()%>
+								${t_dto.getAge() }
 							</td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
 			<div class="btn_wrap">
-				<input type="button" onClick="location.href='Member'" value="목록" class="btn_list">
-				<input type="button" onClick="goUpdateForm()" value="수정" class="btn_list">
-				<input type="button" onClick="goDelete()" value="삭제" class="btn_list">
+				<input type="button" onClick="location.href='MemberList'" value="목록" class="btn_list">
+				<input type="button" onClick="javascript:goUpdateForm()" value="수정" class="btn_list">
+				<input type="button" onClick="javascript:goDelete()" value="삭제" class="btn_list">
 			</div>
 		</div>
 	</div>
 </body>
 </html>
-
-
-
-
-
-
