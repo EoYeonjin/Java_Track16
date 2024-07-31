@@ -17,11 +17,10 @@ public class StudentDao {
 	//조회
 	public ArrayList<StudentDto> getStudentList(String select, String search, String syear, String sclass){
 		ArrayList<StudentDto> dtos = new ArrayList<StudentDto>();
-		String query = "select syear, sclass, no, name\r\n" + 
-				"from student_어연진\r\n" + 
+		String query = "select syear, sclass, no, name from student_어연진\r\n" + 
 				"where syear like '%"+syear+"%'\r\n" + 
 				"and sclass like '%"+sclass+"%'\r\n" + 
-				"and "+select+" like '%"+search+"%'" +
+				"and "+select+" like '%"+search+"%'\r\n" + 
 				"order by syear, sclass, no";
 		
 		try {

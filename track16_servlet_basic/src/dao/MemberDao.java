@@ -235,6 +235,7 @@ public class MemberDao {
 		String query = "update member_어연진 \r\n" + 
 				"set name='"+dto.getName()+"', area='"+dto.getArea()+"', age="+dto.getAge()+"\r\n" + 
 				"where id='"+dto.getId()+"'";
+		System.out.println(query);
 		
 		try {
 			con = DBConnection.getConnection();
