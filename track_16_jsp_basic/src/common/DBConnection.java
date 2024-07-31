@@ -17,7 +17,7 @@ public class DBConnection {
 			e.printStackTrace();
 		}
 		
-		String db_url = "jdbc:oracle:thin:@192.168.0.188:1521:xe";
+		String db_url = "jdbc:oracle:thin:@localhost:1521:xe";
 		String db_user = "track16";
 		String db_password = "1234";
 		

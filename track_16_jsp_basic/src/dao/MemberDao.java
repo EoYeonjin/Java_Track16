@@ -16,11 +16,12 @@ public class MemberDao {
 	ResultSet rs;
 	
 	//전체 조회
-	public ArrayList<MemberDto> getListAll() {
+	public ArrayList<MemberDto> getListAll(String select, String search) {
 		ArrayList<MemberDto> dtos = new ArrayList<MemberDto>();
 		String query = "select m.id, m.name, m.area, a.area_name, m.age\r\n" + 
 				"from member_어연진  m, area a \r\n" + 
-				"where m.area = a.area_code \r\n" + 
+				"where m.area = a.area_code \r\n" +
+				"and "+select+" like '%"+search+"%' \r\n" + 
 				"order by to_number(id)";
 		
 		try {
