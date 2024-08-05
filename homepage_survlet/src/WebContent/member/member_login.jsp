@@ -9,6 +9,23 @@
 			mem.action="Member";
 			mem.submit();
 		}	
+		
+		function logincheck(){
+			if(checkValue(loginform.t_id, "ID를 입력해주세요")) return;
+			if(checkValue(loginform.t_pw, "비밀번호를 입력해주세요")) return;
+			loginform.t_gubun.value="loginCheck";
+			loginform.method="post";
+			loginform.action="Member";
+			loginform.submit();
+		}
+		
+		function goPassword(){
+			if(event.keyCode == 13) loginform.t_pw.focus();
+		}
+		
+		function goLogin(){
+			if(event.keyCode == 13) logincheck();
+		}
 	</script>	
 		<form name="mem">
 			<input type="hidden" name="t_gubun">
@@ -23,12 +40,13 @@
 			
 		<!--login start-->
 			<div class="login-box">
-			<form name="loginform" method="post" enctype="multipart/form-data" action="logincheck.html">
+			<form name="loginform">
+			<input type="hidden" name="t_gubun">
 				<fieldset>
 					<legend>로그인</legend>
 					<div class="left-box">
-						<p><label for="id" class="readonly">아이디</label>ID &nbsp;&nbsp;&nbsp;<input type="text" class="txt" id="id" placeholder="&nbsp;&nbsp;아이디를 입력하세요"></p>
-						<p><label for="password" class="readonly">비밀번호</label>PW &nbsp;<input type="password" class="txt" id="password" placeholder="&nbsp;&nbsp;비밀번호를 입력하세요"></p>
+						<p><label for="id" class="readonly">아이디</label>ID &nbsp;&nbsp;&nbsp;<input type="text" name="t_id" class="txt" id="id" placeholder="&nbsp;&nbsp;아이디를 입력하세요" onKeypress="goPassword()" autofocus></p>
+						<p><label for="password" class="readonly">비밀번호</label>PW &nbsp;<input type="password" name="t_pw" class="txt" id="password" placeholder="&nbsp;&nbsp;비밀번호를 입력하세요" onKeypress="goLogin()"></p>
 					</div>
 					
 					<div class="right-box">
@@ -66,23 +84,6 @@
 			</div>
 		</div>
 		</div>
-	
-	
-		<script>
-			function logincheck() {
-				if(loginform.id.value=="") {
-				alert("아이디를 입력하세요");
-				loginform.id.focus();
-				return;
-				}
-				if(loginform.password.value=="") {
-				alert("비밀번호를 입력하세요");
-				loginform.password.focus();
-				return;
-				}
-				loginform.submit();
-			}
-		</script>
 		
 	</body>
 </html>
