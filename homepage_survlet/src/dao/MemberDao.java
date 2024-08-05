@@ -54,6 +54,7 @@ public class MemberDao {
         return encryptData;
     }
 
+    //등록
 	public int insultMember(MemberDto dto) {
 		int result = 0;
 		String query = "insert into jsl_어연진_member\r\n" + 
@@ -70,6 +71,55 @@ public class MemberDao {
 			result = ps.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println("insultMember() method error\n"+query);
+			e.printStackTrace();
+		} finally {
+			DBConnection.closeDB(con, ps, rs);
+		}
+		
+		return result;
+	}
+
+	//로그인 시 조회
+	public MemberDto getLogName(String id, String password) {
+		MemberDto dto = null;
+		String query = "select name, to_char(last_login_date, 'yyyy-MM-ss') as last_login_date\r\n" + 
+				"from jsl_어연진_member\r\n" + 
+				"where id='"+id+"' and password = '"+password+"'";
+		
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement(query);
+			rs = ps.executeQuery();
+			
+			if(rs.next()) {
+				String name = rs.getString("name");
+				String last_login_date = rs.getString("last_login_date");
+				
+				dto = new MemberDto(name, last_login_date);
+			}
+		} catch (SQLException e) {
+			System.out.println("getLogName() method error\n"+query);
+			e.printStackTrace();
+		} finally {
+			DBConnection.closeDB(con, ps, rs);
+		}
+		
+		return dto;
+	}
+
+	//로그인 시 최종 로그인 시간 업데이트
+	public int setMemberLoginTime(String id, String todayTime) {
+		int result = 0;
+		String query = "update jsl_어연진_member\r\n" + 
+				"set last_login_date=to_date('"+todayTime+"', 'yyyy-MM-dd hh24:mi:ss')\r\n" + 
+				"where id = '"+id+"'";
+		
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement(query);
+			result = ps.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println("setMemberLoginTime() method error\n"+query);
 			e.printStackTrace();
 		} finally {
 			DBConnection.closeDB(con, ps, rs);

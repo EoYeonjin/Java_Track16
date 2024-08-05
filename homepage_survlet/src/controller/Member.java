@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import command.member.MemberJoin;
+import command.member.MemberLogin;
+import command.member.MemberLogout;
 import common.CommonExecute;
 import dao.MemberDao;
 
@@ -48,6 +50,20 @@ public class Member extends HttpServlet {
 		//등록(회원)
 		else if(gubun.equals("save")) {
 			CommonExecute member = new MemberJoin();
+			member.execute(request);
+			
+			viewPage = "common_alert.jsp";
+			
+		//로그인	
+		}else if(gubun.equals("loginCheck")) {
+			CommonExecute member = new MemberLogin();
+			member.execute(request);
+			
+			viewPage = "common_alert.jsp";
+			
+		//로그아숭	
+		}else if(gubun.equals("logout")) {
+			CommonExecute member = new MemberLogout();
 			member.execute(request);
 			
 			viewPage = "common_alert.jsp";

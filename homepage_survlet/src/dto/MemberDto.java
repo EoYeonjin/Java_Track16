@@ -7,6 +7,13 @@ public class MemberDto {
 	last_login_date, exit_date,
 	info;
 	
+	//로그인 시 조회
+	public MemberDto(String name, String last_login_date) {
+		super();
+		this.name = name;
+		this.last_login_date = last_login_date;
+	}
+
 	//등록
 	public MemberDto(String id, String name, String password, String mobile_1, String mobile_2, String mobile_3,
 			String email_1, String email_2, String reg_date, String info) {
