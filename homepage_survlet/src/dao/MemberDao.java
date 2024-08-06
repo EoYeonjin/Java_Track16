@@ -127,4 +127,42 @@ public class MemberDao {
 		
 		return result;
 	}
+
+	//회원 상세 조회
+	public MemberDto getMemberInfo(String id) {
+		MemberDto dto = null;
+		String query = "select name, mobile_1, mobile_2, mobile_3, email_1, email_2, info, \r\n" + 
+				"to_char(reg_date, 'yyyy-MM-dd hh24:mi:ss') as reg_date, \r\n" + 
+				"to_char(last_login_date, 'yyyy-MM-dd hh24:mi:ss') as last_login_date\r\n" + 
+				"from jsl_어연진_member\r\n" + 
+				"where id = '"+id+"'";
+		
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement(query);
+			rs = ps.executeQuery();
+			
+			if(rs.next()) {
+				String name = rs.getString("name");
+				String mobile_1 = rs.getString("mobile_1");
+				String mobile_2 = rs.getString("mobile_2");
+				String mobile_3 = rs.getString("mobile_3");
+				String email_1 = rs.getString("email_1");
+				String email_2 = rs.getString("email_2");
+				String info = rs.getString("info");
+				String reg_date = rs.getString("reg_date");
+				String last_login_date = rs.getString("last_login_date");
+				String exit_date = "";
+				
+				dto = new MemberDto(id, name, mobile_1, mobile_2, mobile_3, email_1, email_2, reg_date, last_login_date, exit_date, info);
+			}
+		} catch (SQLException e) {
+			System.out.println("setMemberLoginTime() method error\n"+query);
+			e.printStackTrace();
+		} finally {
+			DBConnection.closeDB(con, ps, rs);
+		}
+		
+		return dto;
+	}
 }

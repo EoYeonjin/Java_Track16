@@ -29,6 +29,23 @@ public class MemberDto {
 		this.reg_date = reg_date;
 		this.info = info;
 	}
+	
+	//조회
+	public MemberDto(String id, String name, String mobile_1, String mobile_2, String mobile_3, String email_1,
+			String email_2, String reg_date, String last_login_date, String exit_date, String info) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.mobile_1 = mobile_1;
+		this.mobile_2 = mobile_2;
+		this.mobile_3 = mobile_3;
+		this.email_1 = email_1;
+		this.email_2 = email_2;
+		this.reg_date = reg_date;
+		this.last_login_date = last_login_date;
+		this.exit_date = exit_date;
+		this.info = info;
+	}
 
 	public String getId() {
 		return id;
