@@ -11,8 +11,18 @@
 		<script src="js/jquery-3.3.1.min.js"></script>
 		<script src="js/common.js"></script>
 		<script src="https://kit.fontawesome.com/17da812ad5.js" crossorigin="anonymous"></script>
-		
+		<script type="text/javascript">
+			function goMyinfo(){
+				info.t_gubun.value="myinfo";
+				info.method="post";
+				info.action="Member";
+				info.submit();
+			}
+		</script>
 	<body>
+		<form name="info">
+			<input type="hidden" name="t_gubun">
+		</form>
 		<!-- skip navigation -->
 		<dl id="access">
 			<dt>바로가기 및 건너띄기 링크</dt>
@@ -43,18 +53,25 @@
 							<li><a href="https://blog.naver.com/elmusicstudio" target="_blank"><i class="fab fa-blogger-b"> </i></a></li>
 							<li><a href="https://www.youtube.com/channel/UCkoJ_TsGn-WqDVWEzGnhfcA"target="_blank">
 							<i class="fab fa-youtube"> </i></a></li>
+							<c:if test="${not empty sessionId }">
+								<li><a href="javascript:goMyinfo()" title="My Information"><i class="fa-solid fa-user"></i></a></li>
+							</c:if>
 							<li>
 								<c:if test="${empty sessionId}">
-									<a href="Member"><i class="fa-solid fa-right-to-bracket"></i></a>
+									<a href="Member" title="Login"><i class="fa-solid fa-right-to-bracket"></i></a>
 								</c:if><c:if test="${not empty sessionId}">	
-									<a href="Member?t_gubun=logout"><i class="fa-solid fa-right-from-bracket"></i></a>
+									<a href="Member?t_gubun=logout" title="Logout"><i class="fa-solid fa-right-from-bracket"></i></a>
 								</c:if>	
 							</li>
 						</ul>
 					</div>
 					<div class="side-text">
 						 <ul>
-							<li>CONNECT WITH WIDE</li>
+							<c:if test="${not empty sessionId }">
+								<li>${sessionName }님 환영합니다.</li>
+							</c:if><c:if test="${empty sessionId }">
+								<li>CONNECT WITH WIDE</li>	
+							</c:if>
 						 </ul>
 					</div>
 				</div>

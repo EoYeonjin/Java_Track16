@@ -40,6 +40,10 @@ body        {font-family:Nanum Barun Gothic; background:#6dacb8;}
 .id_pw input {width:87%; height:50px; border:none; background:#fff; font-size:15px; font-family:Nanum Barun Gothic; color:#444444; margin:5px; padding-left:4px;}
 .id_pw li i {color: #666;}
 .id_pw input[type="password"] {margin-left:10px;}
+.id_pw li span {display:inline-block; height:37px; padding-top: 13px;}
+.id_pw .myTitle{width:130px;}
+.id_pw .myContent{width:300px;}
+
 /*�߰�*/
 .id_pw input.t_id {width:47%; height:50px; border:none; background:#fff; font-size:15px; font-family:Nanum Barun Gothic; color:#444444; margin:5px; padding-left:4px;}
 .id_pw .t_id_info {display:inline-block; width:20%; }
@@ -53,10 +57,14 @@ body        {font-family:Nanum Barun Gothic; background:#6dacb8;}
 .name_phone .certifi {cursor:pointer; width:20%; border:1px solid #e1e1e1; color:#6dacb8; letter-spacing:6px; }
 .name_phone input.email {width:33%;}
 .name_phone select.email {width:22%; height:40px; }
+.name_phone li span {display:inline-block; height:40px; padding-top: 10px;}
+.name_phone .myTitle{width:130px;}
+.name_phone .myContent{width:300px;}
 
 .check {width:40%; margin:0 auto; text-align:center; background:#f1f1f1; padding:7px; margin-top:10px; padding:30px 0px;}
 .check input[type="radio"], .check input[type="checkbox"] {margin:10px 5px;}
 .check li a {border:1px solid #e1e1e1;  background:#fff; color:#6dacb8; font-size:16px; padding:5px 10px;}
+.check li span {display:inline-block; height:37px; padding-top: 13px;}
 
 .signup {width:43.5%; margin:0 auto; padding:20px;}
 .signup input[type="button"] {width:100%; font-size:35px; background:#6dacb8; color:#fff; font-weight:bold; border:none; cursor:pointer;}
