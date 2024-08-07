@@ -2,7 +2,12 @@
     pageEncoding="UTF-8"%>
 <%@ include file="../common_header.jsp" %>
 <script type="text/javascript">
-
+	function goUpdateForm(){
+		mem.t_gubun.value="updateForm";
+		mem.method="post";
+		mem.action="Member";
+		mem.submit();
+	}
 </script>	
 <!--  header end -->
 	<!-- sub page start -->
@@ -15,8 +20,9 @@
 		<!--join start-->
 			<div class="join-box">
 			
-			<form class="join" name="all">
-			<input type="hidden" name="t_gubun">
+			<form class="join" name="mem">
+				<input type="hidden" name="t_gubun">
+				<input type="hidden" name="t_id" value="${t_dto.getId() }">
 				<fieldset>
 					<legend>회원가입 작성</legend>
 					<h2 class="readonly">회원가입</h2>
@@ -61,6 +67,11 @@
 								<span class="myTitle"><i class="fa-solid fa-pen"></i> 최근 로그인 일자</span>
 								<span class="myContent">${t_dto.getLast_login_date() }</span>
 							</li>
+						</ul>
+						
+						<ul class="update">
+							<input type="button" value="✔ Update" onClick="goUpdateForm();">
+							<input type="button" value="✔ Delete" onClick="goUpdateForm();">
 						</ul>
 				</fieldset>
 			</form>
