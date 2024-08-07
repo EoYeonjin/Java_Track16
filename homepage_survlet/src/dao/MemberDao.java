@@ -157,12 +157,36 @@ public class MemberDao {
 				dto = new MemberDto(id, name, mobile_1, mobile_2, mobile_3, email_1, email_2, reg_date, last_login_date, exit_date, info);
 			}
 		} catch (SQLException e) {
-			System.out.println("setMemberLoginTime() method error\n"+query);
+			System.out.println("getMemberInfo() method error\n"+query);
 			e.printStackTrace();
 		} finally {
 			DBConnection.closeDB(con, ps, rs);
 		}
 		
 		return dto;
+	}
+
+	//비밀번호 조회
+	public int memberCheckPassword(String id, String pw) {
+		int count = 0;
+		String query = "select count(*) as count from jsl_어연진_member\r\n" + 
+				"where id = '"+id+"' and password = '"+pw+"'";
+		
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement(query);
+			rs = ps.executeQuery();
+			
+			if(rs.next()) {
+				count = rs.getInt("count");
+			}
+		} catch (SQLException e) {
+			System.out.println("memberCheckPassword() method error\n"+query);
+			e.printStackTrace();
+		} finally {
+			DBConnection.closeDB(con, ps, rs);
+		}
+		
+		return count;
 	}
 }

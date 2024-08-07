@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import command.member.MemberInfo;
 import command.member.MemberJoin;
 import command.member.MemberLogin;
 import command.member.MemberLogout;
@@ -30,7 +31,7 @@ public class Member extends HttpServlet {
         super();
         // TODO Auto-generated constructor stub
     }
-
+          
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
@@ -67,7 +68,37 @@ public class Member extends HttpServlet {
 			member.execute(request);
 			
 			viewPage = "common_alert.jsp";
+		
+		//내정보
+		}else if(gubun.equals("myinfo")) {
+			CommonExecute member = new MemberInfo();
+			member.execute(request);
+			
+			String sessionGubun = (String)request.getAttribute("sessionGubun");
+			if(sessionGubun.equals("noSession")) {
+				viewPage = "common_alert.jsp";
+			}else {
+				viewPage = "member/member_myinfo.jsp";
+			}
+		
+		//수정 형식
+		}else if(gubun.equals("updateForm")) {
+			CommonExecute member = new MemberInfo();
+			member.execute(request);
+			
+			String sessionGubun = (String)request.getAttribute("sessionGubun");
+			if(sessionGubun.equals("noSession")) {
+				viewPage = "common_alert.jsp";
+			}else {
+				viewPage = "member/member_update.jsp";
+			}
+			
+		//수정	
+		}else if(gubun.equals("update")) {
+			viewPage = "member/member_login.jsp";
 		}
+			
+		
 		
 		
 		RequestDispatcher rd = request.getRequestDispatcher(viewPage);
