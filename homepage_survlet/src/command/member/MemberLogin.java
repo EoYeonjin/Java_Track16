@@ -29,20 +29,19 @@ public class MemberLogin implements CommonExecute {
 		String msg = "ID나 비밀번호가 정확하지 않습니다", url = "Member";
 		
 		if(dto != null) {
-			msg = dto.getName()+"님 환영합니다.";
-			if(dto.getLast_login_date() != null) msg += " 최종 로그인 시간: "+dto.getLast_login_date();
-			url = "Index";
-			
-			int result = dao.setMemberLoginTime(id, CommonUtil.getTodayTime());
-			if(result != 1) System.out.println("회원 최종 로그인 시간 Update 오류 db_MemberLogin.jsp");
-			
-			if(dto.getName().equals("master")) session.setAttribute("sessionLevel", "top");
-			else session.setAttribute("sessionLevel", "no");	
-			
-			session.setAttribute("sessionId", id);
-			session.setAttribute("sessionName", dto.getName());
-			session.setMaxInactiveInterval(60 * 60);
-			
+				msg = dto.getName()+"님 환영합니다.";
+				if(dto.getLast_login_date() != null) msg += " 최종 로그인 시간: "+dto.getLast_login_date();
+				url = "Index";
+				
+				int result = dao.setMemberLoginTime(id, CommonUtil.getTodayTime());
+				if(result != 1) System.out.println("회원 최종 로그인 시간 Update 오류 db_MemberLogin.jsp");
+				
+				if(dto.getName().equals("master")) session.setAttribute("sessionLevel", "top");
+				else session.setAttribute("sessionLevel", "no");	
+				
+				session.setAttribute("sessionId", id);
+				session.setAttribute("sessionName", dto.getName());
+				session.setMaxInactiveInterval(60 * 60);
 		}
 		
 		request.setAttribute("t_msg", msg);

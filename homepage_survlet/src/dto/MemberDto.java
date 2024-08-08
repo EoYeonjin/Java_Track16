@@ -13,6 +13,20 @@ public class MemberDto {
 		this.name = name;
 		this.last_login_date = last_login_date;
 	}
+	
+	//수정
+	public MemberDto(String id, String name, String mobile_1, String mobile_2, String mobile_3, String email_1,
+			String email_2, String info) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.mobile_1 = mobile_1;
+		this.mobile_2 = mobile_2;
+		this.mobile_3 = mobile_3;
+		this.email_1 = email_1;
+		this.email_2 = email_2;
+		this.info = info;
+	}
 
 	//등록
 	public MemberDto(String id, String name, String password, String mobile_1, String mobile_2, String mobile_3,

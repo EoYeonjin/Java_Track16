@@ -84,7 +84,7 @@ public class MemberDao {
 		MemberDto dto = null;
 		String query = "select name, to_char(last_login_date, 'yyyy-MM-ss') as last_login_date\r\n" + 
 				"from jsl_어연진_member\r\n" + 
-				"where id='"+id+"' and password = '"+password+"'";
+				"where id='"+id+"' and password = '"+password+"' and exit_date is null";
 		
 		try {
 			con = DBConnection.getConnection();
@@ -188,5 +188,48 @@ public class MemberDao {
 		}
 		
 		return count;
+	}
+
+	//수정
+	public int updateMember(MemberDto dto) {
+		int result = 0;
+		String query = "update jsl_어연진_member\r\n" + 
+				"set name='"+dto.getName()+"', mobile_1='"+dto.getMobile_1()+"',mobile_2='"+dto.getMobile_2()+"', mobile_3='"+dto.getMobile_3()+"', \r\n" + 
+				"email_1='"+dto.getEmail_1()+"', email_2='"+dto.getEmail_2()+"', info='"+dto.getInfo()+"'\r\n" + 
+				"where id = '"+dto.getId()+"'";
+		
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement(query);
+			result = ps.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println("updateMember() method error\n"+query);
+			e.printStackTrace();
+		} finally {
+			DBConnection.closeDB(con, ps, rs);
+		}
+		
+		return result;
+	}
+
+	//탈퇴 날짜 업데이트
+	public int updateExitDate(String id, String exit_date) {
+		int result = 0;
+		String query = "update jsl_어연진_member\r\n" + 
+				"set exit_date=to_date('"+exit_date+"', 'yyyy-MM-dd hh24:mi:ss')\r\n" + 
+				"where id = '"+id+"'";
+		
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement(query);
+			result = ps.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println("updateExitDate() method error\n"+query);
+			e.printStackTrace();
+		} finally {
+			DBConnection.closeDB(con, ps, rs);
+		}
+		
+		return result;
 	}
 }
