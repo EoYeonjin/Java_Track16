@@ -7,6 +7,7 @@
 	}
 	
 	function goUpdate(){
+		if(checkLength(mem.t_re_pw, 3, 10, "비밀번호를 입력해주세요\n현재 자릿수: ")) return;
 		checkPassword();
 		if(mem.t_pw_check.value == "no"){
 			alert("비밀번호가 정확하지 않습니다");
@@ -35,7 +36,6 @@
 	
   	//중복검사
   	function checkPassword(){
-  		if(checkLength(mem.t_re_pw, 3, 10, "비밀번호를 입력해주세요\n현재 자릿수: ")) return;
   		$.ajax({
   			type:"post",
   			url :"MemberCheckPassword",

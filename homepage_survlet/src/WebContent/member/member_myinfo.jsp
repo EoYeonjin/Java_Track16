@@ -8,6 +8,15 @@
 		mem.action="Member";
 		mem.submit();
 	}
+	
+	function goExit(){
+		if(confirm("계정을 삭제하시겠습니까?")){
+			mem.t_gubun.value="delete";
+			mem.method="post";
+			mem.action="Member";
+			mem.submit();
+		}
+	}
 </script>	
 <!--  header end -->
 	<!-- sub page start -->
@@ -69,10 +78,17 @@
 							</li>
 						</ul>
 						
-						<ul class="update">
+						<ul class="signup">
 							<input type="button" value="✔ Update" onClick="goUpdateForm();">
-							<input type="button" value="✔ Delete" onClick="goUpdateForm();">
 						</ul>
+						<div class="joinbox">
+							<ul class="id_pw">
+								<li>
+									<span class="chButton"><a href="javascript:goExit()"><i class="fa-solid fa-check"> 회원탈퇴</i></a></span>&nbsp;&nbsp;
+									<span class="chButton"><a href=""><i class="fa-solid fa-check"> 비밀번호 변경</i></a></span>
+								</li>
+							</ul>
+						</div>
 				</fieldset>
 			</form>
 			

@@ -43,6 +43,8 @@ body        {font-family:Nanum Barun Gothic; background:#6dacb8;}
 .id_pw li span {display:inline-block; height:37px; padding-top: 13px;}
 .id_pw .myTitle{width:130px;}
 .id_pw .myContent{width:300px;}
+.joinbox .id_pw li a:hover{color:#0B4F; font-weight:bold;}
+.joinbox .id_pw li .chButton{margin:0 30px;}
 
 /*�߰�*/
 .id_pw input.t_id {width:47%; height:50px; border:none; background:#fff; font-size:15px; font-family:Nanum Barun Gothic; color:#444444; margin:5px; padding-left:4px;}
@@ -68,8 +70,6 @@ body        {font-family:Nanum Barun Gothic; background:#6dacb8;}
 
 .signup {width:43.5%; margin:0 auto; padding:20px;}
 .signup input[type="button"] {width:100%; font-size:35px; background:#6dacb8; color:#fff; font-weight:bold; border:none; cursor:pointer;}
-.update {width:43.5%; margin:0 auto; padding:20px;}
-.update input[type="button"] {float:left; width:50%; font-size:35px; background:#6dacb8; color:#fff; font-weight:bold; border:none; cursor:pointer;}
 
 .login_img {width:100%; list-style:none; float:left; padding-left:210px; cursor:pointer; margin-bottom:200px;}
 .login_img .photo1 {width:194px; height:50px; background:url(../images/join_01.jpg) no-repeat; float:left; margin-right:10px;}

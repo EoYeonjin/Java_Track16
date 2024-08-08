@@ -13,14 +13,14 @@
 		<script src="https://kit.fontawesome.com/17da812ad5.js" crossorigin="anonymous"></script>
 		<script type="text/javascript">
 			function goMyinfo(){
-				info.t_gubun.value="myinfo";
-				info.method="post";
-				info.action="Member";
-				info.submit();
+				commonMember.t_gubun.value="myinfo";
+				commonMember.method="post";
+				commonMember.action="Member";
+				commonMember.submit();
 			}
 		</script>
 	<body>
-		<form name="info">
+		<form name="commonMember">
 			<input type="hidden" name="t_gubun">
 		</form>
 		<!-- skip navigation -->
