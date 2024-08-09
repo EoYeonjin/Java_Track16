@@ -26,6 +26,13 @@
 		function goLogin(){
 			if(event.keyCode == 13) logincheck();
 		}
+		
+		function goFindPW(){
+			mem.t_gubun.value="findPasswordForm";
+			mem.method="post";
+			mem.action="Member";
+			mem.submit();
+		}
 	</script>	
 		<form name="mem">
 			<input type="hidden" name="t_gubun">
@@ -60,7 +67,7 @@
 					</div>
 						
 						<p class="btn">
-						<a href="#">ID/PW찾기</a>
+						<a href="javascript:goFindPW()">비밀번호 찾기</a>
 						<a href="javascript:goJoin()">회원가입</a>
 						</p>
 						
@@ -75,7 +82,7 @@
 		<div id="footer">
 			<div class="footer-text">
 				<ul class="sub-logo">
-					<li><a href="index.html" alt="서브로고">EL WIDE</a></li>
+					<li><a href="Index" alt="서브로고">EL WIDE</a></li>
 				</ul>
 				
 				<ul class="copy">
