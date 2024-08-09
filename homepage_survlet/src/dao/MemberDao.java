@@ -232,4 +232,31 @@ public class MemberDao {
 		
 		return result;
 	}
+
+	//비밀번호 조회시 이메일 조회
+	public String getEmail(String id, String name, String mobile_1, String mobile_2, String mobile_3) {
+		String toEmail = "";
+		String query = "select email_1 ||'@'|| email_2 as email\r\n" + 
+				"from jsl_어연진_member\r\n" + 
+				"where id = '"+id+"' and name = '"+name+"'\r\n" + 
+				"and mobile_1 = '"+mobile_1+"' and mobile_2 = '"+mobile_2+"' and mobile_3 = '"+mobile_3+"'" +
+				"and exit_date is null\r\n";
+		
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement(query);
+			rs = ps.executeQuery();
+			
+			if(rs.next()) {
+				toEmail = rs.getString("email");
+			}
+		} catch (SQLException e) {
+			System.out.println("updateExitDate() method error\n"+query);
+			e.printStackTrace();
+		} finally {
+			DBConnection.closeDB(con, ps, rs);
+		}
+		
+		return toEmail;
+	}
 }
