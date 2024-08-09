@@ -72,8 +72,10 @@ background:#eeeeee; padding:70px 25px 55px 25px; }
 .login-box {width:50%; margin:0 auto; background:#EFF8FB; overflow:hidden; padding:20px 40px; }
 .login-box .left-box {width:60%; float:left; margin:20px 0 0 20px; padding-left:40px;}
 .login-box .left-box .txt {width:80%; height:45px;  border:1px solid #999; border-radius:4px; margin-bottom:10px; font-family:Nanum Barun Gothic;}
+.login-box .left-box .txt_small {width:21%; height:45px;  border:1px solid #999; border-radius:4px; margin-bottom:10px; font-family:Nanum Barun Gothic; text-align:center;}
 .login-box .right-box {width:20%; margin:20px 0; float:left;}
 .login-box .right-box .log {color:#fff; background:#6dacb8; font-size:17px; width:100%; height:100px; cursor:pointer;}
+.login-box .right-box .find {color:#fff; background:#6dacb8; font-size:17px; width:100%; height:155px; cursor:pointer;}
 .login-box .checksave { clear:both; color:#777; float:left; margin:0 0 20px 80px;}
 .login-box p.btn {margin:15px;}
 .login-box p.btn a {display:inline-block; width:46%; line-height:45px; text-align:center; color:#fff; background:#6dacb8; border:1px solid #6dacb8; border-radius:3px;}
