@@ -1,0 +1,67 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>도서대여 프로그램</title>
+	<link href="main.css" rel="stylesheet">
+</head>
+<body>
+	<header>
+		<h1>(과정평가형정보처리산업기사)도서대여 프로그램</h1>
+	</header>	
+	
+	<nav>
+		<ul>
+			<li><a href="sub_1.jsp">회원조회</a></li>
+			<li><a href="sub_2.jsp">도서대여등록</a></li>
+			<li><a href="sub_3.jsp">대여이력조회</a></li>
+			<li><a href="sub_4.jsp">도서대여건수</a></li>
+			<li><a href="index.jsp">홈으로</a></li>
+		</ul>
+	</nav>
+	
+	<section>
+		<h2>도서 대여 등록</h2>
+		<br>
+		<table border="1">
+			<colgroup>
+				<col width="20%">
+				<col width="80%">
+			</colgroup>
+			<tr>
+				<th>대여번호 (자동발생)</th>
+				<td class="tdLeft"><input size="10" type="text" name=""></td>
+			</tr>
+			<tr>
+				<th>회원번호</th>
+				<td class="tdLeft"><input size="10" type="text" name=""></td>
+			</tr>
+			<tr>
+				<th>도서코드</th>
+				<td class="tdLeft"><input size="10" type="text" name=""></td>
+			</tr>
+			<tr>
+				<th>도서대여일자</th>
+				<td class="tdLeft"><input size="10" type="text" name=""></td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<input type="button" value="등록">
+					<input type="button" value="다시쓰기">
+				</td>
+			</tr>
+		
+		</table>
+		
+		
+	</section>
+	
+	<footer>
+		<p>
+			HRDKOREA Copyright © All rights Reserved. Human Resources Developement Service of Korea.
+		</p>
+	</footer>
+</body>
+</html>
